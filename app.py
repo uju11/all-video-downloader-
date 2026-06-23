@@ -11,6 +11,9 @@ from contextlib import contextmanager
 DOWNLOAD_DIR = "/app/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+# Cookie file for YouTube authentication
+COOKIE_FILE = os.environ.get('COOKIE_FILE', '/app/cookies.txt')
+
 # Render-specific limits (1GB storage)
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB limit per file
 CLEUP_AFTER_HOURS = 1  # Auto-delete files after 1 hour
@@ -94,7 +97,13 @@ def download_worker(url, out_dir, task_id=None):
             'continue': True,  # Resume interrupted downloads
             'retries': 10,  # More retries for unstable connections
             'fragment_retries': 10,
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
+        
+        # Add cookie file if it exists
+        if os.path.exists(COOKIE_FILE):
+            ydl_opts['cookiefile'] = COOKIE_FILE
+            print(f"Using cookies from: {COOKIE_FILE}")
         
         with tasks_lock:
             if task_id and task_id in tasks:
@@ -216,7 +225,12 @@ def fetch_info():
             'quiet': True,
             'no_warnings': True,
             'socket_timeout': 10,
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
+        
+        # Add cookie file if it exists
+        if os.path.exists(COOKIE_FILE):
+            ydl_opts['cookiefile'] = COOKIE_FILE
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
