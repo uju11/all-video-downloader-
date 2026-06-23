@@ -11,10 +11,14 @@ from contextlib import contextmanager
 DOWNLOAD_DIR = "/app/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+# Render-specific limits (1GB storage)
+MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB limit per file
+CLEUP_AFTER_HOURS = 1  # Auto-delete files after 1 hour
+
 app = Flask(__name__)
 
-# Executor for downloads (threads) - allow up to 5 concurrent downloads
-executor = ThreadPoolExecutor(max_workers=5)
+# Executor for downloads (threads) - reduced for Render's 512MB RAM limit
+executor = ThreadPoolExecutor(max_workers=2)
 
 # Track tasks and futures
 tasks = {}
@@ -44,6 +48,35 @@ def save_tasks():
 
 load_tasks()
 
+# Start auto-cleanup thread for Render
+def cleanup_old_files():
+    """Background thread to clean up old downloads"""
+    while True:
+        time.sleep(3600)  # Run every hour
+        try:
+            now = time.time()
+            with tasks_lock:
+                to_remove = []
+                for task_id, task in tasks.items():
+                    if task.get('completed') and (now - task['completed']) > (CLEUP_AFTER_HOURS * 3600):
+                        to_remove.append(task_id)
+                        # Delete file
+                        if task.get('filename'):
+                            filepath = os.path.join(DOWNLOAD_DIR, task['filename'])
+                            if os.path.exists(filepath):
+                                os.remove(filepath)
+                                print(f"Auto-deleted: {task['filename']}")
+                for task_id in to_remove:
+                    del tasks[task_id]
+                if to_remove:
+                    save_tasks()
+                    print(f"Cleaned up {len(to_remove)} old downloads")
+        except Exception as e:
+            print(f"Cleanup error: {e}")
+
+cleanup_thread = threading.Thread(target=cleanup_old_files, daemon=True)
+cleanup_thread.start()
+
 
 def download_worker(url, out_dir, task_id=None):
     # This function runs in a separate process
@@ -55,9 +88,12 @@ def download_worker(url, out_dir, task_id=None):
             'outtmpl': os.path.join(out_dir, '%(title)s [%(id)s].%(ext)s'),
             'quiet': False,
             'no_warnings': False,
-            'socket_timeout': 30,
+            'socket_timeout': 60,  # Increased timeout for Render
             'http_chunk_size': 10485760,  # 10MB chunks for faster download
             'progress_hooks': [lambda d: _progress_hook(d, task_id)] if task_id else [],
+            'continue': True,  # Resume interrupted downloads
+            'retries': 10,  # More retries for unstable connections
+            'fragment_retries': 10,
         }
         
         with tasks_lock:
@@ -185,11 +221,17 @@ def fetch_info():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
         
+        # Check file size limit
+        filesize = info.get('filesize') or info.get('filesize_approx', 0)
+        if filesize > MAX_FILE_SIZE:
+            limit_mb = MAX_FILE_SIZE / 1024 / 1024
+            return jsonify({'error': f'File too large ({filesize/1024/1024:.1f}MB). Max is {limit_mb:.0f}MB on this tier.'}), 400
+        
         return jsonify({
             'title': info.get('title', 'Unknown'),
             'duration': info.get('duration', 0),
             'thumbnail': info.get('thumbnail', ''),
-            'filesize': info.get('filesize') or info.get('filesize_approx', 0),
+            'filesize': filesize,
             'format': info.get('format', 'Unknown'),
             'ext': info.get('ext', 'mp4'),
         })
@@ -201,6 +243,17 @@ def fetch_info():
 def submit():
     data = request.get_json() or {}
     urls = data.get('urls') or []
+    
+    # Check disk usage for Render
+    try:
+        import shutil
+        total, used, free = shutil.disk_usage(DOWNLOAD_DIR)
+        disk_usage_percent = (used / total) * 100
+        if disk_usage_percent > 90:
+            return jsonify({'error': f'Storage nearly full ({disk_usage_percent:.1f}%). Please clear downloads using /clear_all'}), 507
+    except Exception as e:
+        print(f"Could not check disk usage: {e}")
+    
     created = []
     with tasks_lock:
         for url in urls:
@@ -349,7 +402,7 @@ def restart_download(task_id):
         save_tasks()
     
     # Submit to executor
-    future = executor.submit(download_worker, url, DOWNLOAD_DIR, task_id)
+    future = executor.submit(download_worker, url, task_id)
     with tasks_lock:
         future_to_task[future] = task_id
         future.add_done_callback(_on_done)
