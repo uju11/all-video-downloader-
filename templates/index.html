@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Video Downloader Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f5f7fa;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+      }
+
+      .header h1 {
+        font-size: 1.3rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        white-space: nowrap;
+      }
+
+      .header p {
+        display: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .nav-links a:hover {
+        opacity: 1;
+      }
+
+      .nav-links a.active {
+        opacity: 1;
+        font-weight: 600;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .header-icon {
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+      }
+
+      .header-icon:hover {
+        opacity: 1;
+      }
+
+      .content { 
+        padding: 2rem 3rem;
+        flex: 1;
+      }
+
+      .input-section {
+        margin-bottom: 2rem;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+      }
+
+      .input-section:focus-within {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .input-section label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      textarea {
+        width: 100%;
+        height: 120px;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.95rem;
+        resize: vertical;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      textarea::placeholder { color: #bbb; }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 0.95rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+      }
+
+      button:active { transform: translateY(-1px); }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .clear-btn {
+        background: #f0f0f0;
+        color: #555;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        flex: 0 1 auto;
+      }
+
+      .clear-btn:hover {
+        background: #e8e8e8;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      }
+
+      .tasks-section h2 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 600;
+      }
+
+      .tasks-empty {
+        text-align: center;
+        color: #999;
+        padding: 4rem 2rem;
+        font-size: 1.1rem;
+      }
+
+      .tasks-empty i {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: #ddd;
+      }
+
+      table { 
+        width: 100%; 
+        border-collapse: collapse;
+      }
+
+      thead tr { 
+        background: #f8f9fa; 
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      th {
+        padding: 1.2rem;
+        text-align: left;
+        font-weight: 600;
+        color: #555;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+      }
+
+      td {
+        padding: 1.2rem;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+      }
+
+      tbody tr { 
+        transition: all 0.2s ease;
+      }
+
+      tbody tr:hover { 
+        background: #f8f9fa; 
+      }
+
+      .progress-cell { width: 100%; }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0.5rem 0;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.3s ease;
+        border-radius: 4px;
+      }
+
+      .progress-text {
+        font-size: 0.8rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        font-weight: 500;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .status-queued { background: #f0f0f0; color: #666; }
+      .status-running { background: #ffeaa7; color: #d63031; animation: pulse 2s infinite; }
+      .status-completed { background: #55efc4; color: #27ae60; }
+      .status-error { background: #fab1a0; color: #c0392b; }
+      .status-cancelled { background: #dfe6e9; color: #636e72; }
+
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+
+      .url-cell {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.9rem;
+      }
+
+      .action-cell { text-align: center; }
+
+      .download-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1.2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+      }
+
+      .download-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      .cancel-btn {
+        padding: 0.6rem 1.2rem;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+      }
+
+      .cancel-btn:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+      }
+
+      .remove-btn {
+        padding: 0.6rem 1.2rem;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+      }
+
+      .remove-btn:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+      }
+
+      .restart-btn {
+        padding: 0.6rem 1.2rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+      }
+
+      .restart-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+      }
+
+      .error-text { color: #c0392b; font-size: 0.9rem; }
+      .task-id { font-family: 'Courier New', monospace; font-size: 0.8rem; color: #999; background: #f5f5f5; padding: 0.3rem 0.6rem; border-radius: 4px; }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: slideUp 0.3s ease;
+      }
+
+      @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .modal-close:hover { color: #333; }
+
+      .modal-body {
+        padding: 2rem;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      .video-thumbnail {
+        width: 100%;
+        height: 200px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        object-fit: cover;
+      }
+
+      .video-details { margin-bottom: 1.5rem; }
+
+      .detail-item { margin-bottom: 1rem; }
+
+      .detail-label {
+        font-size: 0.85rem;
+        color: #999;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.4rem;
+      }
+
+      .detail-value {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 500;
+        word-break: break-word;
+      }
+
+      .modal-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+      }
+
+      .modal-btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .modal-btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .modal-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .modal-btn-secondary {
+        background: #f0f0f0;
+        color: #555;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+
+      .modal-btn-secondary:hover {
+        background: #e8e8e8;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      }
+
+      .loading-spinner { display: inline-block; animation: spin 1s linear infinite; }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+      .error-message {
+        color: #c0392b;
+        font-size: 0.9rem;
+        padding: 1rem;
+        background: #fab1a0;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .footer {
+        background: #f8f9fa;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        border-top: 1px solid #e0e0e0;
+        margin-top: 2rem;
+      }
+
+      .footer p {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .footer-links a {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: #764ba2;
+      }
+
+      @media (max-width: 768px) {
+        .content { padding: 1.5rem; }
+        .header h1 { font-size: 1.2rem; }
+        .nav-links { display: none; }
+        .button-group { flex-direction: column; }
+        button { width: 100%; }
+        table { font-size: 0.9rem; }
+        th, td { padding: 0.8rem 0.5rem; }
+        .footer-links { flex-direction: column; gap: 0.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-left">
+          <h1><i class="fas fa-arrow-down"></i> Video Downloader Pro</h1>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Downloads</a></li>
+            <li><a href="#">History</a></li>
+            <li><a href="#">Settings</a></li>
+          </ul>
+        </div>
+        <div class="header-right">
+          <i class="fas fa-cog header-icon"></i>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="input-section">
+          <label for="urls"><i class="fas fa-link"></i> Paste Video URLs</label>
+          <textarea id="urls" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;(one URL per line)"></textarea>
+          <div class="button-group">
+            <button id="start"><i class="fas fa-play"></i> Start Downloads</button>
+            <button id="clear" class="clear-btn"><i class="fas fa-trash"></i> Clear</button>
+          </div>
+        </div>
+
+        <div class="tasks-section">
+          <h2>
+            <i class="fas fa-list"></i> Download Queue
+            <button id="clearAllBtn" class="clear-btn" style="margin-left: auto; padding: 0.5rem 1rem; font-size: 0.9rem;">
+              <i class="fas fa-trash"></i> Clear All
+            </button>
+          </h2>
+          <div id="tasksEmpty" class="tasks-empty">
+            <i class="fas fa-box"></i>
+            <p>No downloads yet. Paste URLs above to get started!</p>
+          </div>
+          <table id="tasks" style="display:none;">
+            <thead>
+              <tr>
+                <th style="width: 5%;">Task ID</th>
+                <th style="width: 30%;">URL</th>
+                <th style="width: 30%;">Progress</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 20%;">Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>© 2024 Video Downloader Pro</p>
+        <ul class="footer-links">
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+      <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+          <h2 id="confirmTitle">Confirm</h2>
+          <button class="modal-close" onclick="closeConfirmModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmMessage" style="font-size: 1rem; color: #333; line-height: 1.5;"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-secondary" onclick="closeConfirmModal()"><i class="fas fa-times"></i> Cancel</button>
+          <button class="modal-btn modal-btn-primary" id="confirmOkBtn" style="background: #e74c3c;"><i class="fas fa-check"></i> Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Preview Modal -->
+    <div id="previewModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-film"></i> Video Details</h2>
+          <button class="modal-close" onclick="closePreviewModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div id="previewError" class="error-message" style="display:none;"></div>
+          <div id="previewLoading" style="text-align: center; padding: 2rem;">
+            <i class="fas fa-spinner loading-spinner" style="font-size: 2rem; color: #667eea;"></i>
+            <p style="margin-top: 1rem; color: #999;">Fetching video details...</p>
+          </div>
+          <div id="previewContent" style="display:none;">
+            <img id="previewThumbnail" class="video-thumbnail" alt="Video thumbnail">
+            <div class="video-details">
+              <div class="detail-item">
+                <div class="detail-label">Title</div>
+                <div class="detail-value" id="previewTitle"></div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Duration</div>
+                <div class="detail-value" id="previewDuration"></div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">File Size</div>
+                <div class="detail-value" id="previewFileSize"></div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Format</div>
+                <div class="detail-value" id="previewFormat"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-secondary" onclick="closePreviewModal()"><i class="fas fa-times"></i> Cancel</button>
+          <button class="modal-btn modal-btn-primary" id="confirmDownloadBtn" onclick="confirmDownload()"><i class="fas fa-download"></i> Download</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const startBtn = document.getElementById('start');
+      const clearBtn = document.getElementById('clear');
+      const clearAllBtn = document.getElementById('clearAllBtn');
+      const urlsEl = document.getElementById('urls');
+      const tasksTable = document.getElementById('tasks');
+      const tasksEmpty = document.getElementById('tasksEmpty');
+      const tbody = document.querySelector('#tasks tbody');
+      const modal = document.getElementById('previewModal');
+      const confirmModal = document.getElementById('confirmModal');
+      const confirmTitle = document.getElementById('confirmTitle');
+      const confirmMessage = document.getElementById('confirmMessage');
+      const confirmOkBtn = document.getElementById('confirmOkBtn');
+
+      let pendingUrls = [];
+      let currentPreviewUrl = '';
+      let confirmCallback = null;
+
+      clearBtn.onclick = () => {
+        showConfirmModal('Clear URLs', 'Clear all URLs from the input field?', () => {
+          urlsEl.value = '';
+          urlsEl.focus();
+        });
+      }
+
+      clearAllBtn.onclick = async () => {
+        showConfirmModal('Clear Downloads', 'Clear all completed, error, and cancelled downloads? Running downloads will be kept.', async () => {
+          try {
+            const res = await fetch('/clear_all', { method: 'POST' });
+            if (res.ok) {
+              pollStatus();
+            } else {
+              alert('Error clearing downloads');
+            }
+          } catch (e) {
+            alert('Failed to clear: ' + e.message);
+          }
+        });
+      }
+
+      startBtn.onclick = async () => {
+        const raw = urlsEl.value.trim();
+        if (!raw) {
+          alert('Paste at least one URL');
+          urlsEl.focus();
+          return;
+        }
+        
+        const urls = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+        
+        if (urls.length === 0) {
+          alert('No valid URLs found');
+          return;
+        }
+
+        pendingUrls = urls;
+        currentPreviewUrl = urls[0];
+        showPreviewModal(urls[0]);
+      }
+
+      async function showPreviewModal(url) {
+        const content = document.getElementById('previewContent');
+        const loading = document.getElementById('previewLoading');
+        const error = document.getElementById('previewError');
+        
+        content.style.display = 'none';
+        loading.style.display = 'block';
+        error.style.display = 'none';
+
+        modal.classList.add('active');
+
+        try {
+          const res = await fetch('/fetch_info', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({url})
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || 'Failed to fetch video info');
+          }
+
+          document.getElementById('previewThumbnail').src = data.thumbnail || '';
+          document.getElementById('previewTitle').textContent = data.title;
+          document.getElementById('previewDuration').textContent = formatTime(data.duration);
+          document.getElementById('previewFileSize').textContent = formatFileSize(data.filesize);
+          document.getElementById('previewFormat').textContent = data.format;
+
+          loading.style.display = 'none';
+          content.style.display = 'block';
+          error.style.display = 'none';
+        } catch (e) {
+          error.textContent = `Error: ${e.message}`;
+          loading.style.display = 'none';
+          error.style.display = 'block';
+        }
+      }
+
+      function closePreviewModal() {
+        modal.classList.remove('active');
+        pendingUrls = [];
+        currentPreviewUrl = '';
+      }
+
+      function showConfirmModal(title, message, callback) {
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
+        confirmCallback = callback;
+        confirmModal.classList.add('active');
+      }
+
+      function closeConfirmModal() {
+        confirmModal.classList.remove('active');
+        confirmCallback = null;
+      }
+
+      confirmOkBtn.onclick = () => {
+        if (confirmCallback) {
+          confirmCallback();
+        }
+        closeConfirmModal();
+      };
+
+      async function confirmDownload() {
+        if (!pendingUrls.length) return;
+
+        const downloadBtn = document.getElementById('confirmDownloadBtn');
+        downloadBtn.disabled = true;
+
+        try {
+          const res = await fetch('/submit', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({urls: pendingUrls})
+          });
+
+          if (res.ok) {
+            closePreviewModal();
+            urlsEl.value = '';
+            pollStatus();
+          } else {
+            alert('Error submitting downloads');
+          }
+        } catch (e) {
+          alert('Error: ' + e.message);
+        } finally {
+          downloadBtn.disabled = false;
+        }
+      }
+
+      async function pollStatus(){
+        const res = await fetch('/status');
+        const data = await res.json();
+        const taskIds = Object.keys(data);
+        
+        if(taskIds.length === 0) {
+          tasksTable.style.display = 'none';
+          tasksEmpty.style.display = 'block';
+          return;
+        }
+
+        tasksTable.style.display = 'table';
+        tasksEmpty.style.display = 'none';
+        tbody.innerHTML = '';
+
+        taskIds.forEach(id => {
+          const info = data[id];
+          const tr = document.createElement('tr');
+
+          const shortId = id.substring(0, 8);
+          const statusBadge = `<span class="status-badge status-${info.status}"><i class="fas fa-${getStatusIcon(info.status)}"></i> ${capitalizeFirst(info.status)}</span>`;
+          
+          const progress = info.progress || 0;
+          const speed = info.speed || 0;
+          const eta = info.eta || 0;
+          const speedText = speed > 0 ? formatSpeed(speed) : '-';
+          const etaText = eta > 0 ? formatTime(eta) : '-';
+          
+          const progressHtml = info.status === 'running' || info.status === 'queued' ? `
+            <div class="progress-cell">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+              <div class="progress-text">
+                <span>${progress}%</span>
+                <span>${speedText}</span>
+                <span>ETA: ${etaText}</span>
+              </div>
+            </div>
+          ` : (info.status === 'completed' ? '<span style="color:#27ae60;"><i class="fas fa-check"></i> Completed</span>' : '<span style="color:#c0392b;"><i class="fas fa-times"></i> Failed</span>');
+          
+          let action = '';
+          if (info.status === 'completed' && info.filename) {
+            action = `
+              <a href="/download/${id}" class="download-link" style="margin-right: 0.5rem; padding: 0.6rem 1rem; font-size: 0.9rem;"><i class="fas fa-download"></i> Get</a>
+              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
+            `;
+          } else if (info.status === 'running') {
+            action = `<button class="cancel-btn" onclick="cancelDownload('${id}')"><i class="fas fa-stop"></i> Cancel</button>`;
+          } else if (info.status === 'queued') {
+            action = `<button class="remove-btn" onclick="removeTask('${id}')"><i class="fas fa-trash"></i> Remove</button>`;
+          } else if (info.status === 'cancelled') {
+            action = `
+              <button class="restart-btn" onclick="restartDownload('${id}')" style="margin-right: 0.5rem;"><i class="fas fa-refresh"></i> Restart</button>
+              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
+            `;
+          } else if (info.status === 'error') {
+            action = `
+              <button class="restart-btn" onclick="restartDownload('${id}')" style="margin-right: 0.5rem;"><i class="fas fa-refresh"></i> Retry</button>
+              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
+            `;
+          }
+
+          tr.innerHTML = `
+            <td><span class="task-id">${shortId}</span></td>
+            <td class="url-cell">${escapeHtml(info.url || '')}</td>
+            <td>${progressHtml}</td>
+            <td>${statusBadge}</td>
+            <td class="action-cell">${action}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        
+        setTimeout(pollStatus, 1000);
+      }
+
+      function formatSpeed(bytesPerSec) {
+        if (bytesPerSec < 1024) return bytesPerSec.toFixed(0) + ' B/s';
+        if (bytesPerSec < 1024 * 1024) return (bytesPerSec / 1024).toFixed(1) + ' KB/s';
+        return (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+      }
+
+      function formatTime(seconds) {
+        if (!seconds) return '-';
+        if (seconds < 60) return Math.round(seconds) + 's';
+        if (seconds < 3600) return (seconds / 60).toFixed(1) + 'm';
+        return (seconds / 3600).toFixed(1) + 'h';
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return 'Unknown';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+      }
+
+      function getStatusIcon(status) {
+        const icons = { queued: 'hourglass', running: 'spinner', completed: 'check', error: 'exclamation', cancelled: 'ban' };
+        return icons[status] || 'circle';
+      }
+
+      async function cancelDownload(taskId) {
+        showConfirmModal('Cancel Download', 'Cancel this download?', async () => {
+          try {
+            const res = await fetch(`/cancel/${taskId}`, { method: 'POST' });
+            if (res.ok) {
+              pollStatus();
+            } else {
+              alert('Error cancelling download');
+            }
+          } catch (e) {
+            alert('Failed to cancel: ' + e.message);
+          }
+        });
+      }
+
+      async function removeTask(taskId) {
+        showConfirmModal('Remove Task', 'Remove this task from the queue?', async () => {
+          try {
+            const res = await fetch(`/remove/${taskId}`, { method: 'POST' });
+            if (res.ok) {
+              pollStatus();
+            } else {
+              const data = await res.json();
+              alert(data.error || 'Error removing task');
+            }
+          } catch (e) {
+            alert('Failed to remove: ' + e.message);
+          }
+        });
+      }
+
+      async function restartDownload(taskId) {
+        showConfirmModal('Restart Download', 'Restart this download?', async () => {
+          try {
+            const res = await fetch(`/restart/${taskId}`, { method: 'POST' });
+            if (res.ok) {
+              pollStatus();
+            } else {
+              const data = await res.json();
+              alert(data.error || 'Error restarting download');
+            }
+          } catch (e) {
+            alert('Failed to restart: ' + e.message);
+          }
+        });
+      }
+
+      function capitalizeFirst(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          closePreviewModal();
+        }
+      }
+
+      pollStatus();
+    </script>
+  </body>
+</html>

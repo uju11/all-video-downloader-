@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  video-downloader:
+    build: .
+    container_name: video-downloader
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./downloads:/app/downloads
+      - .:/app
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
