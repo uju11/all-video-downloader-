@@ -899,6 +899,156 @@
 
       .ios-toast-body strong { color: var(--ink); }
 
+      /* ── GENIE POPUP ── */
+      #genie-popup {
+        position: fixed;
+        bottom: -420px;
+        right: 24px;
+        z-index: 3000;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        pointer-events: none;
+      }
+
+      #genie-popup.visible {
+        bottom: 24px;
+        pointer-events: all;
+      }
+
+      .genie-bubble {
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 16px;
+        box-shadow: 5px 5px 0 var(--ink);
+        padding: 1.2rem 1.4rem;
+        max-width: 280px;
+        position: relative;
+        margin-bottom: 0.6rem;
+      }
+
+      /* Arrow pointing down to genie */
+      .genie-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -18px;
+        right: 36px;
+        width: 0; height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 18px solid var(--ink);
+      }
+
+      .genie-bubble::before {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        right: 38px;
+        width: 0; height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 14px solid var(--white);
+        z-index: 1;
+      }
+
+      .genie-bubble-title {
+        font-family: 'Bangers', cursive;
+        font-size: 1.15rem;
+        letter-spacing: 1.5px;
+        color: var(--ink);
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .genie-tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+        color: #444;
+        margin-bottom: 0.45rem;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+
+      .genie-tip:last-child { margin-bottom: 0; }
+
+      .genie-tip-icon {
+        flex-shrink: 0;
+        font-size: 0.95rem;
+        margin-top: 0.05rem;
+      }
+
+      .genie-close {
+        position: absolute;
+        top: 0.5rem; right: 0.6rem;
+        background: var(--ink);
+        color: var(--yellow);
+        border: none;
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.15s;
+        padding: 0;
+      }
+
+      .genie-close:hover { transform: rotate(90deg); }
+
+      .genie-character {
+        font-size: 3.2rem;
+        text-align: right;
+        margin-right: 0.8rem;
+        animation: genieFloat 3s ease-in-out infinite;
+        filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.25));
+        line-height: 1;
+      }
+
+      .genie-lamp {
+        font-size: 1.6rem;
+        margin-right: 1rem;
+        animation: lampWiggle 4s ease-in-out infinite;
+        display: inline-block;
+      }
+
+      @keyframes genieFloat {
+        0%, 100% { transform: translateY(0) rotate(-3deg); }
+        50% { transform: translateY(-10px) rotate(3deg); }
+      }
+
+      @keyframes lampWiggle {
+        0%, 100% { transform: rotate(0deg); }
+        20% { transform: rotate(-8deg); }
+        40% { transform: rotate(8deg); }
+        60% { transform: rotate(-4deg); }
+        80% { transform: rotate(4deg); }
+      }
+
+      .genie-progress {
+        height: 3px;
+        background: var(--ink);
+        border-radius: 2px;
+        margin-top: 0.8rem;
+        transform-origin: left;
+        animation: genieCountdown 12s linear forwards;
+      }
+
+      @keyframes genieCountdown {
+        from { transform: scaleX(1); }
+        to   { transform: scaleX(0); }
+      }
+
+      @media (max-width: 480px) {
+        #genie-popup { right: 12px; }
+        .genie-bubble { max-width: 240px; }
+      }
+
     </style>
   </head>
   <body>
@@ -1394,6 +1544,59 @@
         <p>Tap the <strong>Share</strong> button ↗ in Safari, then tap <strong>"Save to Files"</strong> or <strong>"Save to Photos"</strong> to keep it!</p>
       </div>
     </div>
+    <!-- GENIE POPUP -->
+    <div id="genie-popup">
+      <div class="genie-bubble">
+        <button class="genie-close" onclick="dismissGenie()" title="Close">×</button>
+        <div class="genie-bubble-title">🧞 Hey there, traveller!</div>
+        <div class="genie-tip">
+          <span class="genie-tip-icon">⚡</span>
+          <span>This app runs on a <strong>FREE server</strong> — it may take 30–50s to wake up!</span>
+        </div>
+        <div class="genie-tip">
+          <span class="genie-tip-icon">📥</span>
+          <span>Keep downloads to <strong>1–2 at a time</strong> to avoid overloading the server.</span>
+        </div>
+        <div class="genie-tip">
+          <span class="genie-tip-icon">💾</span>
+          <span>Keep file sizes <strong>below 100MB</strong> — bigger files may time out or fail.</span>
+        </div>
+        <div class="genie-tip">
+          <span class="genie-tip-icon">⏰</span>
+          <span>Downloaded files are <strong>auto-deleted after 1 hour</strong> — grab them fast!</span>
+        </div>
+        <div class="genie-tip">
+          <span class="genie-tip-icon">🎬</span>
+          <span>Works with YouTube, Vimeo, TikTok, Reddit & more!</span>
+        </div>
+        <div class="genie-progress" id="genieProgress"></div>
+      </div>
+      <div>
+        <span class="genie-character">🧞</span>
+        <span class="genie-lamp">🪔</span>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        // Only show once per browser session
+        if (!sessionStorage.getItem('genieSeen')) {
+          sessionStorage.setItem('genieSeen', '1');
+          setTimeout(() => {
+            document.getElementById('genie-popup').classList.add('visible');
+          }, 1200); // delay so page loads first
+          // Auto-dismiss after 12s
+          setTimeout(dismissGenie, 13200);
+        }
+      })();
+
+      function dismissGenie() {
+        const popup = document.getElementById('genie-popup');
+        popup.style.transition = 'bottom 0.4s ease-in';
+        popup.style.bottom = '-420px';
+        setTimeout(() => popup.remove(), 450);
+      }
+    </script>
 
   </body>
 </html>
