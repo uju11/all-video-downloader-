@@ -3,411 +3,566 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Video Downloader Pro</title>
+    <title>VidSnatch! 🎬 — Comic Video Downloader</title>
+    <meta name="description" content="Download videos from YouTube, Vimeo and more with VidSnatch — the most fun video downloader on the web!" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
+      :root {
+        --ink: #1a1a2e;
+        --yellow: #FFE135;
+        --red: #FF3B3B;
+        --blue: #3B82F6;
+        --green: #22C55E;
+        --purple: #A855F7;
+        --orange: #FB923C;
+        --white: #FFFDF5;
+        --paper: #FFF9E6;
+        --border: 3px solid var(--ink);
+        --border-thick: 4px solid var(--ink);
+        --shadow: 5px 5px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+        --radius: 8px;
+      }
+
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      
+
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #f5f7fa;
+        font-family: 'Comic Neue', cursive;
+        background-color: var(--paper);
+        background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
         min-height: 100vh;
-        margin: 0;
-        padding: 0;
+        color: var(--ink);
+        overflow-x: hidden;
       }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        background: white;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
+      /* HEADER */
       .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: var(--yellow);
+        border-bottom: var(--border-thick);
         padding: 1rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        right: 0; top: 0;
+        width: 200px; height: 100%;
+        background-image: radial-gradient(circle, rgba(0,0,0,0.15) 2px, transparent 2px);
+        background-size: 12px 12px;
+        pointer-events: none;
       }
 
       .header-left {
         display: flex;
         align-items: center;
-        gap: 3rem;
+        gap: 2rem;
+        z-index: 1;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .logo-icon {
+        width: 48px; height: 48px;
+        background: var(--red);
+        border: var(--border-thick);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        box-shadow: var(--shadow-sm);
+        transform: rotate(-3deg);
+        color: var(--white);
+        flex-shrink: 0;
       }
 
       .header h1 {
-        font-size: 1.3rem;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+        font-family: 'Bangers', cursive;
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        color: var(--ink);
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
         white-space: nowrap;
+        line-height: 1;
       }
 
-      .header p {
-        display: none;
-      }
+      .header h1 span { color: var(--red); }
 
       .nav-links {
         display: flex;
-        gap: 1.5rem;
+        gap: 1rem;
         list-style: none;
-        margin: 0;
-        padding: 0;
       }
 
       .nav-links a {
-        color: white;
+        font-family: 'Bangers', cursive;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        color: var(--ink);
         text-decoration: none;
-        font-weight: 500;
+        padding: 0.3rem 0.8rem;
+        border: 2px solid transparent;
+        border-radius: 20px;
+        transition: all 0.15s;
+      }
+
+      .nav-links a:hover, .nav-links a.active {
+        background: var(--ink);
+        color: var(--yellow);
+        border-color: var(--ink);
+      }
+
+      .header-badge {
+        background: var(--red);
+        color: white;
+        font-family: 'Bangers', cursive;
         font-size: 0.95rem;
-        opacity: 0.85;
-        transition: opacity 0.3s ease;
+        letter-spacing: 1px;
+        padding: 0.4rem 1rem;
+        border: var(--border);
+        border-radius: 20px;
+        box-shadow: var(--shadow-sm);
         white-space: nowrap;
+        z-index: 1;
+        transform: rotate(2deg);
       }
 
-      .nav-links a:hover {
-        opacity: 1;
-      }
-
-      .nav-links a.active {
-        opacity: 1;
-        font-weight: 600;
-      }
-
-      .header-right {
+      /* HERO */
+      .hero {
+        background: var(--blue);
+        border-bottom: var(--border-thick);
+        padding: 1.2rem 2rem;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
+        gap: 1.5rem;
+        position: relative;
+        overflow: hidden;
       }
 
-      .header-icon {
-        color: white;
-        font-size: 1.1rem;
-        cursor: pointer;
-        opacity: 0.85;
-        transition: opacity 0.3s ease;
+      .hero::after {
+        content: '';
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.04) 10px, rgba(255,255,255,0.04) 20px);
+        pointer-events: none;
       }
 
-      .header-icon:hover {
-        opacity: 1;
+      .speech-bubble {
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 16px;
+        padding: 0.8rem 1.4rem;
+        position: relative;
+        box-shadow: var(--shadow-sm);
+        font-family: 'Comic Neue', cursive;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        z-index: 1;
       }
 
-      .content { 
-        padding: 2rem 3rem;
-        flex: 1;
+      .speech-bubble::before {
+        content: '';
+        position: absolute;
+        left: -16px; top: 50%;
+        transform: translateY(-50%);
+        width: 0; height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 16px solid var(--ink);
       }
 
-      .input-section {
+      .speech-bubble::after {
+        content: '';
+        position: absolute;
+        left: -11px; top: 50%;
+        transform: translateY(-50%);
+        width: 0; height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 13px solid var(--white);
+      }
+
+      .hero-stars {
+        font-size: 1.5rem;
+        z-index: 1;
+        animation: wobble 3s ease-in-out infinite;
+      }
+
+      .hero-text {
+        font-family: 'Bangers', cursive;
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        color: var(--white);
+        z-index: 1;
+        text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+      }
+
+      @keyframes wobble {
+        0%, 100% { transform: rotate(-5deg) scale(1); }
+        50% { transform: rotate(5deg) scale(1.1); }
+      }
+
+      /* CONTENT */
+      .content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 2rem;
+      }
+
+      /* INPUT PANEL */
+      .input-panel {
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 16px;
+        padding: 1.8rem;
+        box-shadow: var(--shadow);
         margin-bottom: 2rem;
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        transition: all 0.3s ease;
+        position: relative;
       }
 
-      .input-section:focus-within {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      .input-panel::before {
+        content: 'STAR';
+        position: absolute;
+        top: -14px; right: 20px;
+        font-family: 'Bangers', cursive;
+        font-size: 1rem;
+        background: var(--yellow);
+        border: 2px solid var(--ink);
+        padding: 0.1rem 0.5rem;
+        border-radius: 4px;
+        box-shadow: 2px 2px 0 var(--ink);
+        letter-spacing: 1px;
       }
 
-      .input-section label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.8rem;
-        color: #333;
-        font-size: 1.1rem;
+      .panel-title {
+        font-family: 'Bangers', cursive;
+        font-size: 1.6rem;
+        letter-spacing: 1.5px;
+        color: var(--ink);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        border-bottom: 3px dashed var(--ink);
+        padding-bottom: 0.8rem;
       }
+
+      .panel-title i { color: var(--blue); font-size: 1.3rem; }
 
       textarea {
         width: 100%;
-        height: 120px;
+        min-height: 110px;
         padding: 1rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-family: 'Courier New', monospace;
+        border: var(--border-thick);
+        border-radius: var(--radius);
+        font-family: 'Comic Neue', cursive;
         font-size: 0.95rem;
         resize: vertical;
-        transition: all 0.3s ease;
-        background: white;
+        background: var(--paper);
+        color: var(--ink);
+        transition: box-shadow 0.2s, border-color 0.2s;
+        outline: none;
       }
 
       textarea:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        border-color: var(--blue);
+        box-shadow: 4px 4px 0 var(--blue);
       }
 
-      textarea::placeholder { color: #bbb; }
+      textarea::placeholder { color: #aaa; font-style: italic; }
 
       .button-group {
         display: flex;
         gap: 1rem;
-        margin-top: 1.5rem;
+        margin-top: 1.2rem;
         flex-wrap: wrap;
       }
 
-      button {
-        padding: 0.95rem 2rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
+      /* BUTTONS */
+      .btn {
+        font-family: 'Bangers', cursive;
+        font-size: 1.2rem;
+        letter-spacing: 1.5px;
+        padding: 0.75rem 1.8rem;
+        border: var(--border-thick);
+        border-radius: var(--radius);
         cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 0.6rem;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        gap: 0.5rem;
+        transition: transform 0.1s, box-shadow 0.1s;
+        box-shadow: var(--shadow);
+        text-decoration: none;
+        white-space: nowrap;
       }
 
-      button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+      .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 7px 7px 0 var(--ink);
       }
 
-      button:active { transform: translateY(-1px); }
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--ink);
+      }
 
-      button:disabled {
-        opacity: 0.6;
+      .btn:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
         transform: none;
+        box-shadow: var(--shadow);
       }
 
-      .clear-btn {
-        background: #f0f0f0;
-        color: #555;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        flex: 0 1 auto;
+      .btn-primary   { background: var(--red);    color: var(--white); }
+      .btn-secondary { background: var(--paper);  color: var(--ink);   }
+      .btn-green     { background: var(--green);  color: var(--white); }
+      .btn-purple    { background: var(--purple); color: var(--white); }
+      .btn-orange    { background: var(--orange); color: var(--white); }
+
+      .btn-sm {
+        font-size: 1rem;
+        padding: 0.45rem 1rem;
+        box-shadow: var(--shadow-sm);
       }
 
-      .clear-btn:hover {
-        background: #e8e8e8;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      .btn-sm:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 5px 5px 0 var(--ink);
       }
 
-      .tasks-section h2 {
-        color: #333;
-        margin-bottom: 1rem;
-        font-size: 1.4rem;
+      .btn-sm:active {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      /* QUEUE PANEL */
+      .queue-panel {
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 16px;
+        padding: 1.8rem;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+
+      .queue-panel::before {
+        content: 'ZAP';
+        position: absolute;
+        top: -14px; right: 20px;
+        font-family: 'Bangers', cursive;
+        font-size: 1rem;
+        background: var(--red);
+        color: white;
+        border: 2px solid var(--ink);
+        padding: 0.1rem 0.5rem;
+        border-radius: 4px;
+        box-shadow: 2px 2px 0 var(--ink);
+        letter-spacing: 1px;
+      }
+
+      .queue-header {
         display: flex;
         align-items: center;
-        gap: 0.7rem;
-        font-weight: 600;
+        justify-content: space-between;
+        border-bottom: 3px dashed var(--ink);
+        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
       }
 
+      .queue-title {
+        font-family: 'Bangers', cursive;
+        font-size: 1.6rem;
+        letter-spacing: 1.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .queue-title i { color: var(--purple); }
+
+      /* EMPTY STATE */
       .tasks-empty {
         text-align: center;
-        color: #999;
-        padding: 4rem 2rem;
-        font-size: 1.1rem;
+        padding: 3.5rem 2rem;
       }
 
-      .tasks-empty i {
-        font-size: 3.5rem;
+      .empty-doodle {
+        font-size: 4rem;
         margin-bottom: 1rem;
-        color: #ddd;
+        animation: bounce 2s ease-in-out infinite;
+        display: block;
       }
 
-      table { 
-        width: 100%; 
+      .tasks-empty p {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 1.15rem;
+        color: #888;
+        margin-top: 0.5rem;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+
+      /* TABLE */
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: var(--radius);
+        border: var(--border-thick);
+      }
+
+      table {
+        width: 100%;
         border-collapse: collapse;
+        background: var(--white);
       }
 
-      thead tr { 
-        background: #f8f9fa; 
-        border-bottom: 2px solid #e0e0e0;
+      thead tr {
+        background: var(--ink);
+        color: var(--yellow);
       }
 
       th {
-        padding: 1.2rem;
+        padding: 0.9rem 1rem;
         text-align: left;
-        font-weight: 600;
-        color: #555;
-        font-size: 0.95rem;
-        letter-spacing: 0.5px;
+        font-family: 'Bangers', cursive;
+        font-size: 1.05rem;
+        letter-spacing: 1.5px;
+        white-space: nowrap;
       }
 
       td {
-        padding: 1.2rem;
-        border-bottom: 1px solid #f0f0f0;
-        color: #333;
+        padding: 0.9rem 1rem;
+        border-bottom: 2px dashed #e0ddd5;
+        font-size: 0.92rem;
+        vertical-align: middle;
+        color: var(--ink);
       }
 
-      tbody tr { 
-        transition: all 0.2s ease;
+      tbody tr:last-child td { border-bottom: none; }
+      tbody tr { transition: background 0.15s; }
+      tbody tr:hover { background: var(--paper); }
+
+      /* STATUS BADGES */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-family: 'Bangers', cursive;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        border: 2px solid var(--ink);
+        box-shadow: 2px 2px 0 var(--ink);
+        white-space: nowrap;
       }
 
-      tbody tr:hover { 
-        background: #f8f9fa; 
+      .status-queued    { background: #F3F4F6; color: #6B7280; }
+      .status-running   { background: var(--yellow); color: var(--ink); animation: pulse 1.5s ease-in-out infinite; }
+      .status-completed { background: var(--green); color: white; }
+      .status-error     { background: var(--red); color: white; }
+      .status-cancelled { background: #D1D5DB; color: #374151; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.85; transform: scale(1.04); }
       }
 
-      .progress-cell { width: 100%; }
-
+      /* PROGRESS BAR */
       .progress-bar {
         width: 100%;
-        height: 8px;
-        background: #e0e0e0;
-        border-radius: 4px;
+        height: 14px;
+        background: var(--paper);
+        border: 2px solid var(--ink);
+        border-radius: 20px;
         overflow: hidden;
-        margin: 0.5rem 0;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        margin: 0.4rem 0;
+        box-shadow: inset 2px 2px 0 rgba(0,0,0,0.08);
       }
 
       .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        transition: width 0.3s ease;
-        border-radius: 4px;
+        background: repeating-linear-gradient(45deg, var(--red), var(--red) 10px, #FF6B6B 10px, #FF6B6B 20px);
+        border-radius: 20px;
+        transition: width 0.4s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 1.5s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
       }
 
       .progress-text {
-        font-size: 0.8rem;
-        color: #666;
+        font-size: 0.78rem;
+        color: #555;
         display: flex;
         justify-content: space-between;
-        font-weight: 500;
+        font-weight: 700;
       }
 
-      .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .status-queued { background: #f0f0f0; color: #666; }
-      .status-running { background: #ffeaa7; color: #d63031; animation: pulse 2s infinite; }
-      .status-completed { background: #55efc4; color: #27ae60; }
-      .status-error { background: #fab1a0; color: #c0392b; }
-      .status-cancelled { background: #dfe6e9; color: #636e72; }
-
-      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-
+      /* URL CELL */
       .url-cell {
-        max-width: 250px;
+        max-width: 220px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        font-style: italic;
+        color: #555;
       }
 
-      .action-cell { text-align: center; }
-
-      .download-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.6rem 1.2rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+      .task-id {
+        font-family: 'Courier New', monospace;
+        font-size: 0.75rem;
+        background: var(--paper);
+        border: 1px solid #ddd;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        color: #888;
       }
 
-      .download-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-      }
+      .action-cell { text-align: center; white-space: nowrap; }
+      .download-link { display: inline-flex; align-items: center; gap: 0.4rem; }
 
-      .cancel-btn {
-        padding: 0.6rem 1.2rem;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
-      }
-
-      .cancel-btn:hover {
-        background: #c0392b;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
-      }
-
-      .remove-btn {
-        padding: 0.6rem 1.2rem;
-        background: #6c757d;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
-      }
-
-      .remove-btn:hover {
-        background: #5a6268;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
-      }
-
-      .restart-btn {
-        padding: 0.6rem 1.2rem;
-        background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
-      }
-
-      .restart-btn:hover {
-        background: #218838;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-      }
-
-      .error-text { color: #c0392b; font-size: 0.9rem; }
-      .task-id { font-family: 'Courier New', monospace; font-size: 0.8rem; color: #999; background: #f5f5f5; padding: 0.3rem 0.6rem; border-radius: 4px; }
-
-      /* Modal Styles */
+      /* MODAL */
       .modal {
         display: none;
         position: fixed;
         z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        animation: fadeIn 0.3s ease;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background: rgba(26,26,46,0.65);
+        animation: fadeIn 0.2s ease;
       }
 
       @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -419,240 +574,277 @@
       }
 
       .modal-content {
-        background: white;
+        background: var(--white);
+        border: var(--border-thick);
         border-radius: 16px;
         width: 90%;
         max-width: 500px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        animation: slideUp 0.3s ease;
+        box-shadow: 8px 8px 0 var(--ink);
+        animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
-      @keyframes slideUp {
-        from { transform: translateY(30px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+      @keyframes popIn {
+        from { transform: scale(0.85) rotate(-2deg); opacity: 0; }
+        to   { transform: scale(1) rotate(0deg); opacity: 1; }
       }
 
       .modal-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 1.2rem 1.5rem;
+        border-bottom: var(--border-thick);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background: var(--yellow);
+        border-radius: 12px 12px 0 0;
       }
 
       .modal-header h2 {
-        font-size: 1.5rem;
-        color: #333;
+        font-family: 'Bangers', cursive;
+        font-size: 1.6rem;
+        letter-spacing: 1.5px;
       }
 
       .modal-close {
-        background: none;
+        background: var(--ink);
+        color: var(--yellow);
         border: none;
-        font-size: 1.5rem;
-        color: #999;
+        width: 30px; height: 30px;
+        border-radius: 50%;
         cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        transition: transform 0.15s;
         padding: 0;
-        box-shadow: none;
       }
 
-      .modal-close:hover { color: #333; }
+      .modal-close:hover { transform: rotate(90deg) scale(1.1); box-shadow: none; }
 
       .modal-body {
-        padding: 2rem;
-        max-height: 70vh;
+        padding: 1.8rem;
+        max-height: 65vh;
         overflow-y: auto;
       }
 
       .video-thumbnail {
         width: 100%;
-        height: 200px;
-        background: #f0f0f0;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
+        height: 185px;
+        background: var(--paper);
+        border: var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 1.2rem;
         object-fit: cover;
       }
 
-      .video-details { margin-bottom: 1.5rem; }
-
-      .detail-item { margin-bottom: 1rem; }
+      .detail-item { margin-bottom: 0.9rem; }
 
       .detail-label {
-        font-size: 0.85rem;
-        color: #999;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.4rem;
+        font-family: 'Bangers', cursive;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        color: #888;
+        margin-bottom: 0.25rem;
       }
 
       .detail-value {
-        font-size: 1rem;
-        color: #333;
-        font-weight: 500;
+        font-size: 0.97rem;
+        font-weight: 700;
         word-break: break-word;
+        color: var(--ink);
       }
 
       .modal-footer {
-        padding: 1.5rem;
-        border-top: 1px solid #f0f0f0;
+        padding: 1.2rem 1.5rem;
+        border-top: var(--border-thick);
         display: flex;
-        gap: 1rem;
+        gap: 0.8rem;
         justify-content: flex-end;
+        background: var(--paper);
+        border-radius: 0 0 12px 12px;
       }
 
-      .modal-btn {
-        padding: 0.8rem 1.5rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
+      .loading-spinner { display: inline-block; animation: spin 0.8s linear infinite; }
 
-      .modal-btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-      }
-
-      .modal-btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-      }
-
-      .modal-btn-secondary {
-        background: #f0f0f0;
-        color: #555;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      }
-
-      .modal-btn-secondary:hover {
-        background: #e8e8e8;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-      }
-
-      .loading-spinner { display: inline-block; animation: spin 1s linear infinite; }
       @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
       .error-message {
-        color: #c0392b;
+        color: var(--red);
         font-size: 0.9rem;
-        padding: 1rem;
-        background: #fab1a0;
-        border-radius: 6px;
+        padding: 0.9rem 1rem;
+        background: #FFF0F0;
+        border: 2px solid var(--red);
+        border-radius: var(--radius);
         margin-bottom: 1rem;
+        font-weight: 700;
       }
 
+      /* FOOTER */
       .footer {
-        background: #f8f9fa;
-        padding: 1.5rem 2rem;
+        background: var(--ink);
+        color: var(--yellow);
+        padding: 1.2rem 2rem;
         text-align: center;
-        border-top: 1px solid #e0e0e0;
-        margin-top: 2rem;
+        margin-top: 3rem;
+        border-top: var(--border-thick);
       }
 
-      .footer p {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
+      .footer-brand {
+        font-family: 'Bangers', cursive;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        margin-bottom: 0.4rem;
       }
+
+      .footer p { font-size: 0.82rem; opacity: 0.7; margin-bottom: 0.5rem; }
 
       .footer-links {
         display: flex;
         justify-content: center;
-        gap: 2rem;
+        gap: 1.5rem;
         list-style: none;
-        margin: 0;
-        padding: 0;
+        margin-top: 0.5rem;
       }
 
       .footer-links a {
-        color: #667eea;
+        color: var(--yellow);
         text-decoration: none;
-        font-size: 0.85rem;
-        transition: color 0.3s ease;
+        font-size: 0.82rem;
+        opacity: 0.7;
+        transition: opacity 0.2s;
       }
 
-      .footer-links a:hover {
-        color: #764ba2;
+      .footer-links a:hover { opacity: 1; }
+
+      .zap-tag {
+        display: inline-block;
+        background: var(--yellow);
+        border: 2px solid var(--ink);
+        font-family: 'Bangers', cursive;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 0.15rem 0.6rem;
+        border-radius: 4px;
+        box-shadow: 2px 2px 0 var(--ink);
+        transform: rotate(-1deg);
+        vertical-align: middle;
+        margin-left: 0.5rem;
       }
 
       @media (max-width: 768px) {
-        .content { padding: 1.5rem; }
-        .header h1 { font-size: 1.2rem; }
+        .header { padding: 0.8rem 1rem; }
+        .header h1 { font-size: 1.6rem; }
         .nav-links { display: none; }
+        .content { padding: 1.2rem; }
+        .hero { padding: 0.9rem 1rem; gap: 0.8rem; }
+        .hero-text { font-size: 1.1rem; }
+        .btn { font-size: 1rem; padding: 0.65rem 1.2rem; }
         .button-group { flex-direction: column; }
-        button { width: 100%; }
-        table { font-size: 0.9rem; }
-        th, td { padding: 0.8rem 0.5rem; }
-        .footer-links { flex-direction: column; gap: 0.5rem; }
+        table { font-size: 0.82rem; }
+        th, td { padding: 0.7rem 0.6rem; }
+        .footer-links { flex-direction: column; gap: 0.4rem; }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <div class="header-left">
-          <h1><i class="fas fa-arrow-down"></i> Video Downloader Pro</h1>
-          <ul class="nav-links">
-            <li><a href="#" class="active">Downloads</a></li>
-            <li><a href="#">History</a></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+          <h1>Vid<span>Snatch</span>!</h1>
         </div>
-        <div class="header-right">
-          <i class="fas fa-cog header-icon"></i>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Downloads</a></li>
+          <li><a href="#">History</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </div>
+      <div class="header-badge">
+        🎬 POW! FREE DOWNLOADS
+      </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <div class="hero">
+      <span class="hero-stars">💥</span>
+      <div class="speech-bubble">Grab any video in seconds!</div>
+      <span class="hero-text">PASTE · CLICK · DONE!</span>
+      <span class="hero-stars" style="margin-left:auto;">✨</span>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+
+      <!-- INPUT PANEL -->
+      <div class="input-panel">
+        <div class="panel-title">
+          <i class="fas fa-link"></i>
+          Paste Your URLs
+          <span class="zap-tag">ZAPP!</span>
+        </div>
+        <textarea
+          id="urls"
+          placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;(one URL per line — go wild!)"
+        ></textarea>
+        <div class="button-group">
+          <button id="start" class="btn btn-primary">
+            <i class="fas fa-bolt"></i> DOWNLOAD NOW!
+          </button>
+          <button id="clear" class="btn btn-secondary">
+            <i class="fas fa-eraser"></i> Clear
+          </button>
         </div>
       </div>
 
-      <div class="content">
-        <div class="input-section">
-          <label for="urls"><i class="fas fa-link"></i> Paste Video URLs</label>
-          <textarea id="urls" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;(one URL per line)"></textarea>
-          <div class="button-group">
-            <button id="start"><i class="fas fa-play"></i> Start Downloads</button>
-            <button id="clear" class="clear-btn"><i class="fas fa-trash"></i> Clear</button>
+      <!-- QUEUE PANEL -->
+      <div class="queue-panel">
+        <div class="queue-header">
+          <div class="queue-title">
+            <i class="fas fa-list-check"></i>
+            Download Queue
           </div>
+          <button id="clearAllBtn" class="btn btn-secondary btn-sm">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
         </div>
 
-        <div class="tasks-section">
-          <h2>
-            <i class="fas fa-list"></i> Download Queue
-            <button id="clearAllBtn" class="clear-btn" style="margin-left: auto; padding: 0.5rem 1rem; font-size: 0.9rem;">
-              <i class="fas fa-trash"></i> Clear All
-            </button>
-          </h2>
-          <div id="tasksEmpty" class="tasks-empty">
-            <i class="fas fa-box"></i>
-            <p>No downloads yet. Paste URLs above to get started!</p>
-          </div>
-          <table id="tasks" style="display:none;">
+        <div id="tasksEmpty" class="tasks-empty">
+          <span class="empty-doodle">📭</span>
+          <p>Nothing here yet, hero!</p>
+          <p style="font-family:'Comic Neue',cursive; font-size:0.9rem; margin-top:0.4rem; color:#aaa;">Paste a URL above and smash that button! 💪</p>
+        </div>
+
+        <div id="tasksTableWrap" class="table-wrap" style="display:none;">
+          <table id="tasks">
             <thead>
               <tr>
-                <th style="width: 5%;">Task ID</th>
-                <th style="width: 30%;">URL</th>
-                <th style="width: 30%;">Progress</th>
-                <th style="width: 15%;">Status</th>
-                <th style="width: 20%;">Action</th>
+                <th style="width:6%;">ID</th>
+                <th style="width:28%;">URL</th>
+                <th style="width:30%;">Progress</th>
+                <th style="width:16%;">Status</th>
+                <th style="width:20%;">Action</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
-      
-      <div class="footer">
-        <p>© 2024 Video Downloader Pro</p>
-        <ul class="footer-links">
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Help Center</a></li>
-        </ul>
-      </div>
-    </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-brand">⚡ VidSnatch! ⚡</div>
+      <p>© 2024 VidSnatch — Comic Video Downloader Pro</p>
+      <ul class="footer-links">
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Help Center</a></li>
+      </ul>
+    </footer>
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
@@ -662,11 +854,15 @@
           <button class="modal-close" onclick="closeConfirmModal()"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
-          <p id="confirmMessage" style="font-size: 1rem; color: #333; line-height: 1.5;"></p>
+          <p id="confirmMessage" style="font-size: 1rem; color: var(--ink); line-height: 1.6; font-weight: 700;"></p>
         </div>
         <div class="modal-footer">
-          <button class="modal-btn modal-btn-secondary" onclick="closeConfirmModal()"><i class="fas fa-times"></i> Cancel</button>
-          <button class="modal-btn modal-btn-primary" id="confirmOkBtn" style="background: #e74c3c;"><i class="fas fa-check"></i> Confirm</button>
+          <button class="btn btn-secondary btn-sm" onclick="closeConfirmModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-primary btn-sm" id="confirmOkBtn">
+            <i class="fas fa-check"></i> Confirm
+          </button>
         </div>
       </div>
     </div>
@@ -680,52 +876,57 @@
         </div>
         <div class="modal-body">
           <div id="previewError" class="error-message" style="display:none;"></div>
-          <div id="previewLoading" style="text-align: center; padding: 2rem;">
-            <i class="fas fa-spinner loading-spinner" style="font-size: 2rem; color: #667eea;"></i>
-            <p style="margin-top: 1rem; color: #999;">Fetching video details...</p>
+          <div id="previewLoading" style="text-align:center; padding: 2rem;">
+            <i class="fas fa-spinner loading-spinner" style="font-size: 2.5rem; color: var(--blue);"></i>
+            <p style="margin-top: 1rem; color: #999; font-weight:700;">Fetching video details...</p>
           </div>
           <div id="previewContent" style="display:none;">
-            <img id="previewThumbnail" class="video-thumbnail" alt="Video thumbnail">
+            <img id="previewThumbnail" class="video-thumbnail" alt="Video thumbnail" />
             <div class="video-details">
               <div class="detail-item">
-                <div class="detail-label">Title</div>
+                <div class="detail-label">🎬 Title</div>
                 <div class="detail-value" id="previewTitle"></div>
               </div>
               <div class="detail-item">
-                <div class="detail-label">Duration</div>
+                <div class="detail-label">⏱ Duration</div>
                 <div class="detail-value" id="previewDuration"></div>
               </div>
               <div class="detail-item">
-                <div class="detail-label">File Size</div>
+                <div class="detail-label">💾 File Size</div>
                 <div class="detail-value" id="previewFileSize"></div>
               </div>
               <div class="detail-item">
-                <div class="detail-label">Format</div>
+                <div class="detail-label">📦 Format</div>
                 <div class="detail-value" id="previewFormat"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="modal-btn modal-btn-secondary" onclick="closePreviewModal()"><i class="fas fa-times"></i> Cancel</button>
-          <button class="modal-btn modal-btn-primary" id="confirmDownloadBtn" onclick="confirmDownload()"><i class="fas fa-download"></i> Download</button>
+          <button class="btn btn-secondary btn-sm" onclick="closePreviewModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-green btn-sm" id="confirmDownloadBtn" onclick="confirmDownload()">
+            <i class="fas fa-download"></i> DOWNLOAD!
+          </button>
         </div>
       </div>
     </div>
 
     <script>
-      const startBtn = document.getElementById('start');
-      const clearBtn = document.getElementById('clear');
-      const clearAllBtn = document.getElementById('clearAllBtn');
-      const urlsEl = document.getElementById('urls');
-      const tasksTable = document.getElementById('tasks');
-      const tasksEmpty = document.getElementById('tasksEmpty');
-      const tbody = document.querySelector('#tasks tbody');
-      const modal = document.getElementById('previewModal');
-      const confirmModal = document.getElementById('confirmModal');
-      const confirmTitle = document.getElementById('confirmTitle');
-      const confirmMessage = document.getElementById('confirmMessage');
-      const confirmOkBtn = document.getElementById('confirmOkBtn');
+      const startBtn      = document.getElementById('start');
+      const clearBtn      = document.getElementById('clear');
+      const clearAllBtn   = document.getElementById('clearAllBtn');
+      const urlsEl        = document.getElementById('urls');
+      const tasksTable    = document.getElementById('tasks');
+      const tasksTableWrap= document.getElementById('tasksTableWrap');
+      const tasksEmpty    = document.getElementById('tasksEmpty');
+      const tbody         = document.querySelector('#tasks tbody');
+      const modal         = document.getElementById('previewModal');
+      const confirmModal  = document.getElementById('confirmModal');
+      const confirmTitle  = document.getElementById('confirmTitle');
+      const confirmMessage= document.getElementById('confirmMessage');
+      const confirmOkBtn  = document.getElementById('confirmOkBtn');
 
       let pendingUrls = [];
       let currentPreviewUrl = '';
@@ -736,80 +937,69 @@
           urlsEl.value = '';
           urlsEl.focus();
         });
-      }
+      };
 
       clearAllBtn.onclick = async () => {
         showConfirmModal('Clear Downloads', 'Clear all completed, error, and cancelled downloads? Running downloads will be kept.', async () => {
           try {
             const res = await fetch('/clear_all', { method: 'POST' });
-            if (res.ok) {
-              pollStatus();
-            } else {
-              alert('Error clearing downloads');
-            }
+            if (res.ok) pollStatus();
+            else alert('Error clearing downloads');
           } catch (e) {
             alert('Failed to clear: ' + e.message);
           }
         });
-      }
+      };
 
       startBtn.onclick = async () => {
         const raw = urlsEl.value.trim();
         if (!raw) {
-          alert('Paste at least one URL');
+          alert('Paste at least one URL first, hero!');
           urlsEl.focus();
           return;
         }
-        
-        const urls = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-        
+        const urls = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
         if (urls.length === 0) {
-          alert('No valid URLs found');
+          alert('No valid URLs found!');
           return;
         }
-
         pendingUrls = urls;
         currentPreviewUrl = urls[0];
         showPreviewModal(urls[0]);
-      }
+      };
 
       async function showPreviewModal(url) {
         const content = document.getElementById('previewContent');
         const loading = document.getElementById('previewLoading');
-        const error = document.getElementById('previewError');
-        
+        const error   = document.getElementById('previewError');
+
         content.style.display = 'none';
         loading.style.display = 'block';
-        error.style.display = 'none';
-
+        error.style.display   = 'none';
         modal.classList.add('active');
 
         try {
           const res = await fetch('/fetch_info', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({url})
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
           });
-
           const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data.error || 'Failed to fetch video info');
-          }
+          if (!res.ok) throw new Error(data.error || 'Failed to fetch video info');
 
           document.getElementById('previewThumbnail').src = data.thumbnail || '';
-          document.getElementById('previewTitle').textContent = data.title;
+          document.getElementById('previewTitle').textContent    = data.title;
           document.getElementById('previewDuration').textContent = formatTime(data.duration);
           document.getElementById('previewFileSize').textContent = formatFileSize(data.filesize);
-          document.getElementById('previewFormat').textContent = data.format;
+          document.getElementById('previewFormat').textContent   = data.format;
 
           loading.style.display = 'none';
           content.style.display = 'block';
-          error.style.display = 'none';
+          error.style.display   = 'none';
         } catch (e) {
-          error.textContent = `Error: ${e.message}`;
+          error.textContent     = 'Error: ' + e.message;
           loading.style.display = 'none';
-          error.style.display = 'block';
+          error.style.display   = 'block';
         }
       }
 
@@ -820,7 +1010,7 @@
       }
 
       function showConfirmModal(title, message, callback) {
-        confirmTitle.textContent = title;
+        confirmTitle.textContent   = title;
         confirmMessage.textContent = message;
         confirmCallback = callback;
         confirmModal.classList.add('active');
@@ -832,25 +1022,20 @@
       }
 
       confirmOkBtn.onclick = () => {
-        if (confirmCallback) {
-          confirmCallback();
-        }
+        if (confirmCallback) confirmCallback();
         closeConfirmModal();
       };
 
       async function confirmDownload() {
         if (!pendingUrls.length) return;
-
         const downloadBtn = document.getElementById('confirmDownloadBtn');
         downloadBtn.disabled = true;
-
         try {
           const res = await fetch('/submit', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({urls: pendingUrls})
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ urls: pendingUrls })
           });
-
           if (res.ok) {
             closePreviewModal();
             urlsEl.value = '';
@@ -865,117 +1050,107 @@
         }
       }
 
-      async function pollStatus(){
-        const res = await fetch('/status');
+      async function pollStatus() {
+        const res  = await fetch('/status');
         const data = await res.json();
         const taskIds = Object.keys(data);
-        
-        if(taskIds.length === 0) {
-          tasksTable.style.display = 'none';
-          tasksEmpty.style.display = 'block';
+
+        if (taskIds.length === 0) {
+          tasksTableWrap.style.display = 'none';
+          tasksEmpty.style.display     = 'block';
           return;
         }
 
-        tasksTable.style.display = 'table';
-        tasksEmpty.style.display = 'none';
+        tasksTableWrap.style.display = 'block';
+        tasksEmpty.style.display     = 'none';
         tbody.innerHTML = '';
 
         taskIds.forEach(id => {
-          const info = data[id];
-          const tr = document.createElement('tr');
-
+          const info    = data[id];
+          const tr      = document.createElement('tr');
           const shortId = id.substring(0, 8);
-          const statusBadge = `<span class="status-badge status-${info.status}"><i class="fas fa-${getStatusIcon(info.status)}"></i> ${capitalizeFirst(info.status)}</span>`;
-          
-          const progress = info.progress || 0;
-          const speed = info.speed || 0;
-          const eta = info.eta || 0;
+
+          const statusBadge = '<span class="status-badge status-' + info.status + '">' +
+            '<i class="fas fa-' + getStatusIcon(info.status) + '"></i> ' +
+            capitalizeFirst(info.status) + '</span>';
+
+          const progress  = info.progress || 0;
+          const speed     = info.speed    || 0;
+          const eta       = info.eta      || 0;
           const speedText = speed > 0 ? formatSpeed(speed) : '-';
-          const etaText = eta > 0 ? formatTime(eta) : '-';
-          
-          const progressHtml = info.status === 'running' || info.status === 'queued' ? `
-            <div class="progress-cell">
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%"></div>
-              </div>
-              <div class="progress-text">
-                <span>${progress}%</span>
-                <span>${speedText}</span>
-                <span>ETA: ${etaText}</span>
-              </div>
-            </div>
-          ` : (info.status === 'completed' ? '<span style="color:#27ae60;"><i class="fas fa-check"></i> Completed</span>' : '<span style="color:#c0392b;"><i class="fas fa-times"></i> Failed</span>');
-          
-          let action = '';
-          if (info.status === 'completed' && info.filename) {
-            action = `
-              <a href="/download/${id}" class="download-link" style="margin-right: 0.5rem; padding: 0.6rem 1rem; font-size: 0.9rem;"><i class="fas fa-download"></i> Get</a>
-              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
-            `;
-          } else if (info.status === 'running') {
-            action = `<button class="cancel-btn" onclick="cancelDownload('${id}')"><i class="fas fa-stop"></i> Cancel</button>`;
-          } else if (info.status === 'queued') {
-            action = `<button class="remove-btn" onclick="removeTask('${id}')"><i class="fas fa-trash"></i> Remove</button>`;
-          } else if (info.status === 'cancelled') {
-            action = `
-              <button class="restart-btn" onclick="restartDownload('${id}')" style="margin-right: 0.5rem;"><i class="fas fa-refresh"></i> Restart</button>
-              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
-            `;
-          } else if (info.status === 'error') {
-            action = `
-              <button class="restart-btn" onclick="restartDownload('${id}')" style="margin-right: 0.5rem;"><i class="fas fa-refresh"></i> Retry</button>
-              <button class="remove-btn" onclick="removeTask('${id}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">×</button>
-            `;
+          const etaText   = eta   > 0 ? formatTime(eta)   : '-';
+
+          let progressHtml;
+          if (info.status === 'running' || info.status === 'queued') {
+            progressHtml = '<div>' +
+              '<div class="progress-bar"><div class="progress-fill" style="width:' + progress + '%"></div></div>' +
+              '<div class="progress-text"><span>' + progress + '%</span><span>' + speedText + '</span><span>ETA: ' + etaText + '</span></div>' +
+              '</div>';
+          } else if (info.status === 'completed') {
+            progressHtml = '<span style="color:var(--green); font-weight:700;"><i class="fas fa-check-circle"></i> Done!</span>';
+          } else {
+            progressHtml = '<span style="color:var(--red); font-weight:700;"><i class="fas fa-times-circle"></i> Failed</span>';
           }
 
-          tr.innerHTML = `
-            <td><span class="task-id">${shortId}</span></td>
-            <td class="url-cell">${escapeHtml(info.url || '')}</td>
-            <td>${progressHtml}</td>
-            <td>${statusBadge}</td>
-            <td class="action-cell">${action}</td>
-          `;
+          let action = '';
+          if (info.status === 'completed' && info.filename) {
+            action = '<a href="/download/' + id + '" class="btn btn-green btn-sm download-link"><i class="fas fa-download"></i> Get</a>' +
+              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
+          } else if (info.status === 'running') {
+            action = '<button class="btn btn-primary btn-sm" onclick="cancelDownload(\'' + id + '\')"><i class="fas fa-stop"></i> Stop</button>';
+          } else if (info.status === 'queued') {
+            action = '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')"><i class="fas fa-trash"></i> Remove</button>';
+          } else if (info.status === 'cancelled') {
+            action = '<button class="btn btn-orange btn-sm" onclick="restartDownload(\'' + id + '\')" style="margin-right:0.4rem;"><i class="fas fa-rotate-right"></i> Restart</button>' +
+              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')">x</button>';
+          } else if (info.status === 'error') {
+            action = '<button class="btn btn-orange btn-sm" onclick="restartDownload(\'' + id + '\')" style="margin-right:0.4rem;"><i class="fas fa-rotate-right"></i> Retry</button>' +
+              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')">x</button>';
+          }
+
+          tr.innerHTML = '<td><span class="task-id">' + shortId + '</span></td>' +
+            '<td class="url-cell" title="' + escapeHtml(info.url || '') + '">' + escapeHtml(info.url || '') + '</td>' +
+            '<td>' + progressHtml + '</td>' +
+            '<td>' + statusBadge + '</td>' +
+            '<td class="action-cell">' + action + '</td>';
           tbody.appendChild(tr);
         });
-        
+
         setTimeout(pollStatus, 1000);
       }
 
       function formatSpeed(bytesPerSec) {
-        if (bytesPerSec < 1024) return bytesPerSec.toFixed(0) + ' B/s';
+        if (bytesPerSec < 1024)         return bytesPerSec.toFixed(0) + ' B/s';
         if (bytesPerSec < 1024 * 1024) return (bytesPerSec / 1024).toFixed(1) + ' KB/s';
         return (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
       }
 
       function formatTime(seconds) {
-        if (!seconds) return '-';
-        if (seconds < 60) return Math.round(seconds) + 's';
+        if (!seconds)       return '-';
+        if (seconds < 60)   return Math.round(seconds) + 's';
         if (seconds < 3600) return (seconds / 60).toFixed(1) + 'm';
         return (seconds / 3600).toFixed(1) + 'h';
       }
 
       function formatFileSize(bytes) {
-        if (!bytes) return 'Unknown';
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        if (!bytes)                      return 'Unknown';
+        if (bytes < 1024)               return bytes + ' B';
+        if (bytes < 1024 * 1024)        return (bytes / 1024).toFixed(1) + ' KB';
         if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
         return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
       }
 
       function getStatusIcon(status) {
-        const icons = { queued: 'hourglass', running: 'spinner', completed: 'check', error: 'exclamation', cancelled: 'ban' };
+        const icons = { queued: 'hourglass-half', running: 'spinner', completed: 'check', error: 'exclamation-triangle', cancelled: 'ban' };
         return icons[status] || 'circle';
       }
 
       async function cancelDownload(taskId) {
-        showConfirmModal('Cancel Download', 'Cancel this download?', async () => {
+        showConfirmModal('Stop Download', 'Stop this download? (You can restart it later)', async () => {
           try {
-            const res = await fetch(`/cancel/${taskId}`, { method: 'POST' });
-            if (res.ok) {
-              pollStatus();
-            } else {
-              alert('Error cancelling download');
-            }
+            const res = await fetch('/cancel/' + taskId, { method: 'POST' });
+            if (res.ok) pollStatus();
+            else alert('Error cancelling download');
           } catch (e) {
             alert('Failed to cancel: ' + e.message);
           }
@@ -985,7 +1160,7 @@
       async function removeTask(taskId) {
         showConfirmModal('Remove Task', 'Remove this task from the queue?', async () => {
           try {
-            const res = await fetch(`/remove/${taskId}`, { method: 'POST' });
+            const res = await fetch('/remove/' + taskId, { method: 'POST' });
             if (res.ok) {
               pollStatus();
             } else {
@@ -1001,7 +1176,7 @@
       async function restartDownload(taskId) {
         showConfirmModal('Restart Download', 'Restart this download?', async () => {
           try {
-            const res = await fetch(`/restart/${taskId}`, { method: 'POST' });
+            const res = await fetch('/restart/' + taskId, { method: 'POST' });
             if (res.ok) {
               pollStatus();
             } else {
@@ -1025,10 +1200,9 @@
       }
 
       window.onclick = (event) => {
-        if (event.target === modal) {
-          closePreviewModal();
-        }
-      }
+        if (event.target === modal)        closePreviewModal();
+        if (event.target === confirmModal) closeConfirmModal();
+      };
 
       pollStatus();
     </script>
