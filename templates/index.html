@@ -43,8 +43,12 @@
         background-repeat: repeat-x;
         animation: scrollBg 25s linear infinite;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
         color: var(--ink);
         overflow-x: hidden;
+        user-select: none;
+        -webkit-user-select: none;
       }
 
       @keyframes scrollBg {
@@ -100,6 +104,14 @@
         transform: rotate(-3deg);
         color: var(--white);
         flex-shrink: 0;
+        cursor: pointer;
+        animation: pulseBolt 2s infinite;
+      }
+      
+      @keyframes pulseBolt {
+        0% { transform: rotate(-3deg) scale(1); box-shadow: var(--shadow-sm); }
+        50% { transform: rotate(-3deg) scale(1.1); box-shadow: 0 0 15px var(--yellow); color: var(--yellow); }
+        100% { transform: rotate(-3deg) scale(1); box-shadow: var(--shadow-sm); }
       }
 
       .header h1 {
@@ -221,6 +233,8 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem 2rem;
+        position: relative;
+        z-index: 10;
       }
 
       /* INPUT PANEL */
@@ -247,7 +261,6 @@
         box-shadow: 2px 2px 0 var(--ink);
         letter-spacing: 1px;
       }
-
       .panel-title {
         font-family: 'Bangers', cursive;
         font-size: 1.6rem;
@@ -686,6 +699,7 @@
         text-align: center;
         background: #C84C0C; /* Ground color */
         color: var(--white);
+        position: relative;
       }
 
       .ground-pattern {
@@ -1031,13 +1045,17 @@
       .genie-close:hover { transform: rotate(90deg); }
 
       .genie-character {
-        font-size: 3.5rem;
-        text-align: right;
+        width: 60px;
+        height: 80px;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Crect x='3' y='0' width='5' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='1' width='9' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='2' width='3' height='1' fill='%238b4513'/%3E%3Crect x='5' y='2' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='4' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='4' width='2' height='1' fill='%238b4513'/%3E%3Crect x='5' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='5' width='2' height='1' fill='%238b4513'/%3E%3Crect x='3' y='5' width='4' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='5' width='4' height='1' fill='%23000000'/%3E%3Crect x='3' y='6' width='6' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='7' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='1' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='8' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='7' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='8' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='9' width='4' height='1' fill='%230000ff'/%3E%3Crect x='8' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='5' y='10' width='2' height='1' fill='%230000ff'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='8' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='9' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='10' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='11' width='6' height='1' fill='%230000ff'/%3E%3Crect x='9' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='12' width='8' height='1' fill='%230000ff'/%3E%3Crect x='10' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='7' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='1' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='8' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='0' y='15' width='4' height='1' fill='%238b4513'/%3E%3Crect x='8' y='15' width='4' height='1' fill='%238b4513'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        image-rendering: pixelated;
         margin-right: 0.5rem;
         margin-bottom: -10px;
         animation: marioJump 3s ease-in-out infinite;
         filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
-        line-height: 1;
         z-index: 1;
       }
 
@@ -1100,15 +1118,117 @@
         .genie-bubble { max-width: 240px; }
       }
 
+      /* ── BOSS FIGHT BACKGROUND ── */
+      #boss-fight-container {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        padding: 0 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        z-index: 0;
+        pointer-events: none;
+      }
+      #game-over-banner {
+        pointer-events: auto;
+      }
+
+      .fighter {
+        width: 72px;
+        height: 96px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        image-rendering: pixelated;
+        filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.15));
+        transition: transform 0.1s, filter 0.1s;
+        position: relative;
+      }
+
+      .fighter::after {
+        content: '';
+        position: absolute;
+        top: -15px; left: -15px; right: -15px; bottom: -15px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 10px #00ffff, 0 0 20px #00ffff;
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+        z-index: -1;
+      }
+      .fighter.shield-active::after { opacity: 1; }
+
+      /* Game UI */
+      #health-bars-container {
+        position: absolute;
+        top: 5px; left: 0; width: 100%;
+        display: flex; justify-content: space-between; padding: 0 5%;
+        box-sizing: border-box;
+      }
+      .hero-health, .boss-health { display: flex; align-items: center; gap: 10px; }
+      .boss-health { flex-direction: row-reverse; }
+      .hero-name { font-family: 'Press Start 2P', cursive; color: #fff; text-shadow: 2px 2px 0 #000; font-size: 0.8rem; }
+      .health-bar-wrapper { width: 150px; height: 15px; background: #000; border: 3px solid #fff; border-radius: 8px; overflow: hidden; }
+      #mario-health-bar, #boss-health-bar { width: 100%; height: 100%; transition: width 0.3s, background 0.3s; }
+      #mario-health-bar { background: #00cc00; }
+      #boss-health-bar { background: #00cc00; }
+      #powerup-block {
+        position: fixed;
+        width: 40px; height: 40px;
+        background: #FBD000;
+        border: 4px solid #000;
+        box-shadow: inset -4px -4px 0 rgba(0,0,0,0.2);
+        color: #C84C0C;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1.5rem;
+        display: flex; justify-content: center; align-items: center;
+        cursor: pointer;
+        z-index: 100;
+        display: none;
+        animation: powerupFloat 1s infinite alternate;
+      }
+      @keyframes powerupFloat {
+        from { transform: translateY(0); }
+        to { transform: translateY(-10px); }
+      }
+
+
+      #bg-mario { 
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Crect x='3' y='0' width='5' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='1' width='9' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='2' width='3' height='1' fill='%238b4513'/%3E%3Crect x='5' y='2' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='4' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='4' width='2' height='1' fill='%238b4513'/%3E%3Crect x='5' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='5' width='2' height='1' fill='%238b4513'/%3E%3Crect x='3' y='5' width='4' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='5' width='4' height='1' fill='%23000000'/%3E%3Crect x='3' y='6' width='6' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='7' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='1' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='8' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='7' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='8' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='9' width='4' height='1' fill='%230000ff'/%3E%3Crect x='8' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='5' y='10' width='2' height='1' fill='%230000ff'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='8' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='9' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='10' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='11' width='6' height='1' fill='%230000ff'/%3E%3Crect x='9' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='12' width='8' height='1' fill='%230000ff'/%3E%3Crect x='10' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='7' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='1' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='8' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='0' y='15' width='4' height='1' fill='%238b4513'/%3E%3Crect x='8' y='15' width='4' height='1' fill='%238b4513'/%3E%3C/svg%3E");
+        animation: marioBounce 0.6s ease-in-out infinite alternate; 
+      }
+      #bg-boss { 
+        width: 100px;
+        height: 100px;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='0' width='8' height='2' fill='%2300aa00'/%3E%3Crect x='2' y='2' width='12' height='2' fill='%2300aa00'/%3E%3Crect x='2' y='4' width='2' height='2' fill='%2300aa00'/%3E%3Crect x='4' y='4' width='2' height='2' fill='%23ffffff'/%3E%3Crect x='6' y='4' width='4' height='2' fill='%2300aa00'/%3E%3Crect x='10' y='4' width='2' height='2' fill='%23ffffff'/%3E%3Crect x='12' y='4' width='2' height='2' fill='%2300aa00'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='10' y='5' width='1' height='1' fill='%23000000'/%3E%3Crect x='0' y='6' width='16' height='4' fill='%2300aa00'/%3E%3Crect x='4' y='8' width='8' height='4' fill='%23ffcc00'/%3E%3Crect x='2' y='10' width='12' height='4' fill='%2300aa00'/%3E%3Crect x='4' y='14' width='2' height='2' fill='%23000000'/%3E%3Crect x='10' y='14' width='2' height='2' fill='%23000000'/%3E%3C/svg%3E");
+        animation: bossBounce 0.6s ease-in-out infinite alternate; 
+        animation-delay: 0.3s; 
+      }
+
+      @keyframes marioBounce {
+        from { transform: translateY(0); }
+        to { transform: translateY(-15px); }
+      }
+      @keyframes bossBounce {
+        from { transform: scaleX(-1) translateY(0); }
+        to { transform: scaleX(-1) translateY(-15px); }
+      }
+
     </style>
   </head>
   <body>
+
+
+    <!-- POWERUP BLOCK -->
+    <div id="powerup-block" onclick="collectPowerup()">?</div>
 
     <!-- HEADER -->
     <header class="header">
       <div class="header-left">
         <div class="logo">
-          <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+          <div class="logo-icon" onclick="showInfoModal()"><i class="fas fa-bolt"></i></div>
           <h1>Vid<span>Snatch</span>!</h1>
         </div>
         <ul class="nav-links">
@@ -1116,14 +1236,27 @@
           <li><a href="#" id="nav-history" onclick="switchTab('history')">History</a></li>
         </ul>
       </div>
+      <div class="header-right" style="display:flex; align-items:center; z-index:1;">
+        <span class="hero-text" style="font-size: 1rem;">PASTE · CLICK · DONE!</span>
+        <span class="hero-stars" style="margin-left: 0.5rem; font-size:1.2rem;">✨</span>
+      </div>
     </header>
 
     <!-- HERO BANNER -->
     <div class="hero">
-      <span class="hero-stars">💥</span>
-      <div class="speech-bubble">Grab any video in seconds!</div>
-      <span class="hero-text">PASTE · CLICK · DONE!</span>
-      <span class="hero-stars" style="margin-left:auto;">✨</span>
+      <div id="health-bars-container">
+        <div class="hero-health">
+          <div id="hero-name" class="hero-name">MARIO</div>
+          <div class="health-bar-wrapper"><div id="mario-health-bar"></div></div>
+        </div>
+        <div class="boss-health">
+          <div style="display:flex; flex-direction:column; align-items:flex-end;">
+            <div id="boss-name" class="hero-name">BOWSER</div>
+            <div id="boss-hearts" style="font-size:0.8rem; margin-top:2px;">❤️❤️❤️</div>
+          </div>
+          <div class="health-bar-wrapper"><div id="boss-health-bar"></div></div>
+        </div>
+      </div>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -1187,6 +1320,16 @@
 
     <!-- FOOTER -->
     <footer class="footer">
+      <!-- BOSS FIGHT BACKGROUND -->
+      <div id="boss-fight-container">
+        <div id="bg-mario" class="fighter shield-active"></div>
+        <div id="bg-boss" class="fighter"></div>
+        <div id="game-over-banner" style="display:none; position:absolute; bottom:120px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10;">
+            <h2 id="game-over-title" style="color:#E52521; font-family:'Press Start 2P', cursive; font-size: 2.5rem; text-shadow: 3px 3px 0 #fff; margin-bottom: 15px;">GAME OVER</h2>
+            <button onclick="restartMiniGame()" style="font-family:'Press Start 2P', cursive; padding: 12px 24px; background:#FBD000; border:4px solid #000; cursor:pointer; font-size:1.2rem;">RESTART</button>
+        </div>
+      </div>
+      
       <div class="ground-pattern"></div>
       <div class="footer-content">
         <div class="footer-brand">🍄 VidSnatch! 🍄</div>
@@ -1215,6 +1358,34 @@
           </button>
           <button class="btn btn-primary btn-sm" id="confirmOkBtn">
             <i class="fas fa-check"></i> Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-info-circle"></i> Welcome to VidSnatch!</h2>
+          <button class="modal-close" onclick="closeInfoModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" style="font-family: 'Comic Neue', cursive;">
+          <h3 style="color: var(--red); font-family: 'Bangers', cursive; font-size: 1.4rem; border-bottom: 2px dashed #ccc; padding-bottom: 5px; margin-bottom: 10px;">⚡ The Video Downloader</h3>
+          <p style="margin-bottom: 1rem; line-height: 1.5; font-size: 1.1rem; color: #333;">
+            VidSnatch is the fastest and most fun way to grab videos from YouTube, Vimeo, TikTok, Reddit, and more!
+            Just <strong>paste</strong> your URL, <strong>click ZAPP</strong>, and you're <strong>DONE!</strong>
+          </p>
+          <h3 style="color: var(--blue); font-family: 'Bangers', cursive; font-size: 1.4rem; border-bottom: 2px dashed #ccc; padding-bottom: 5px; margin-bottom: 10px; margin-top: 15px;">🍄 Mini-Game Controls</h3>
+          <ul style="list-style: none; padding: 0; line-height: 1.8; font-size: 1.1rem; color: #333; margin-bottom: 1rem;">
+            <li>🖱️ <strong>Click Anywhere</strong> (except UI) to throw Fireballs at Bowser!</li>
+            <li><kbd style="background:#eee;border:1px solid #ccc;padding:2px 6px;border-radius:4px;font-family:monospace;box-shadow:1px 1px 0 #999;">Space</kbd> <strong>Jump</strong> to dodge incoming attacks!</li>
+            <li><kbd style="background:#eee;border:1px solid #ccc;padding:2px 6px;border-radius:4px;font-family:monospace;box-shadow:1px 1px 0 #999;">Esc</kbd> <strong>Shield</strong> yourself if you get into trouble!</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary btn-sm" onclick="closeInfoModal()">
+            <i class="fas fa-check"></i> Got it!
           </button>
         </div>
       </div>
@@ -1374,14 +1545,14 @@
       startBtn.onclick = async () => {
         const raw = urlsEl.value.trim();
         if (!raw) {
-          alert('Paste a URL first, hero!');
+          showToast('Paste a URL first, hero!');
           urlsEl.focus();
           return;
         }
         // Take just the first line for direct streaming
         const url = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
         if (!url) {
-          alert('No valid URL found!');
+          showToast('No valid URL found!');
           return;
         }
         currentPreviewUrl = url;
@@ -1429,6 +1600,13 @@
         modal.classList.remove('active');
         currentPreviewUrl = '';
         currentPreviewTitle = '';
+      }
+
+      function showInfoModal() {
+        document.getElementById('infoModal').classList.add('active');
+      }
+      function closeInfoModal() {
+        document.getElementById('infoModal').classList.remove('active');
       }
 
       function showConfirmModal(title, message, callback) {
@@ -1507,6 +1685,7 @@
       window.onclick = (event) => {
         if (event.target === modal)        closePreviewModal();
         if (event.target === confirmModal) closeConfirmModal();
+        if (event.target === document.getElementById('infoModal')) closeInfoModal();
       };
     </script>
     <!-- iOS Save-to-Files Toast -->
@@ -1523,29 +1702,32 @@
         <div class="genie-bubble">
           <button class="genie-close" onclick="dismissGenie()" title="Close">×</button>
           <div class="genie-bubble-title">🍄 It's-a me!</div>
-          <div class="genie-tip">
+          <div id="custom-tip" class="genie-tip" style="display:none; justify-content:center; text-align:center; font-weight:bold; font-size:1.05rem; padding: 15px 0; color: #E52521;">
+             <span id="custom-tip-text"></span>
+          </div>
+          <div class="genie-tip default-tip">
             <span class="genie-tip-icon">⚡</span>
             <span>This app runs on a <strong>FREE server</strong> — it may take 30–50s to wake up!</span>
           </div>
-          <div class="genie-tip">
+          <div class="genie-tip default-tip">
             <span class="genie-tip-icon">📥</span>
             <span>Keep downloads to <strong>1–2 at a time</strong> to avoid overloading the server.</span>
           </div>
-          <div class="genie-tip">
+          <div class="genie-tip default-tip">
             <span class="genie-tip-icon">💾</span>
             <span>Keep file sizes <strong>below 100MB</strong> — bigger files may time out or fail.</span>
           </div>
-          <div class="genie-tip">
+          <div class="genie-tip default-tip">
             <span class="genie-tip-icon">📺</span>
             <span>YouTube videos max out at <strong>720p</strong>. Other sites are full HD!</span>
           </div>
-          <div class="genie-tip">
+          <div class="genie-tip default-tip">
             <span class="genie-tip-icon">🎬</span>
             <span>Works with YouTube, Vimeo, TikTok, Reddit & more!</span>
           </div>
           <div class="genie-progress" id="genieProgress"></div>
         </div>
-        <div class="genie-character">🍄</div>
+        <div class="genie-character"></div>
       </div>
       <div class="genie-lamp" onclick="summonGenie()" title="Summon Mario!"></div>
     </div>
@@ -1553,8 +1735,30 @@
     <script>
       let genieTimer = null;
 
-      function summonGenie() {
+      function summonGenie(isCustom = false, customMsg = '') {
         const popup = document.getElementById('genie-popup');
+        
+        // If it's a manual pipe click (not custom) and already visible, toggle it off
+        if (!isCustom && popup.classList.contains('visible')) {
+            dismissGenie();
+            return;
+        }
+
+        const title = document.querySelector('.genie-bubble-title');
+        const defaultTips = document.querySelectorAll('.default-tip');
+        const customTip = document.getElementById('custom-tip');
+        
+        if (isCustom) {
+            title.innerHTML = "🍄 MESSAGE FOR YOU!";
+            defaultTips.forEach(t => t.style.display = 'none');
+            customTip.style.display = 'flex';
+            document.getElementById('custom-tip-text').innerText = customMsg;
+        } else {
+            title.innerHTML = "🍄 It's-a me!";
+            defaultTips.forEach(t => t.style.display = 'flex');
+            customTip.style.display = 'none';
+        }
+
         const progress = document.getElementById('genieProgress');
         
         // Reset animation
@@ -1573,6 +1777,10 @@
         popup.classList.remove('visible');
       }
 
+      function showToast(msg) {
+        summonGenie(true, msg);
+      }
+
       (function() {
         // Only auto-show once per browser session
         if (!sessionStorage.getItem('genieSeen')) {
@@ -1581,55 +1789,255 @@
         }
       })();
 
-      /* ── FIREBALL LOGIC ── */
-      function shootFireball(targetX) {
-        const container = document.getElementById('genie-container');
-        if (!container) return;
-        const rect = container.getBoundingClientRect();
+      /* ── MINI GAME LOGIC ── */
+      const MARIO_SVG = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Crect x='3' y='0' width='5' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='1' width='9' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='2' width='3' height='1' fill='%238b4513'/%3E%3Crect x='5' y='2' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='4' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='4' width='2' height='1' fill='%238b4513'/%3E%3Crect x='5' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='5' width='2' height='1' fill='%238b4513'/%3E%3Crect x='3' y='5' width='4' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='5' width='4' height='1' fill='%23000000'/%3E%3Crect x='3' y='6' width='6' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='7' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='1' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='8' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='7' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='8' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='9' width='4' height='1' fill='%230000ff'/%3E%3Crect x='8' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='5' y='10' width='2' height='1' fill='%230000ff'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='8' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='9' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='10' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='11' width='6' height='1' fill='%230000ff'/%3E%3Crect x='9' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='12' width='8' height='1' fill='%230000ff'/%3E%3Crect x='10' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='7' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='1' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='8' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='0' y='15' width='4' height='1' fill='%238b4513'/%3E%3Crect x='8' y='15' width='4' height='1' fill='%238b4513'/%3E%3C/svg%3E";
+      const PEACH_SVG = MARIO_SVG.replace(/%23ff0000/g, '%23ff99cc').replace(/%230000ff/g, '%23ffd700'); // Red -> Pink, Blue -> Gold
+
+      let gameActive = true;
+      let marioHealth = 100;
+      let bossHealth = 100;
+      let bossLives = 3;
+      let powerLevel = 1;
+      let hasShield = true;
+      let isJumping = false;
+      let bossAttackInterval = null;
+      let powerupInterval = null;
+
+      function initMiniGame() {
+        marioHealth = 100;
+        bossHealth = 100;
+        bossLives = 3;
+        powerLevel = 1;
+        hasShield = true;
+        updateShieldVis();
+        updateHealthBar();
+        updateBossHealthBar();
+        document.getElementById('bg-mario').style.backgroundImage = `url("${MARIO_SVG}")`;
+
+        if (bossAttackInterval) clearInterval(bossAttackInterval);
+        if (powerupInterval) clearInterval(powerupInterval);
         
-        // Start from Mario's position
-        let x = rect.left + rect.width / 2;
-        let y = rect.top + 30; // approx height
+        bossAttackInterval = setInterval(() => {
+          if (gameActive) shootFireball(false, 1); // Boss attacks automatically
+        }, 3000);
+
+        powerupInterval = setInterval(() => {
+          if (gameActive) spawnPowerup();
+        }, 10000); // appears every 10 seconds (stays for 3s)
+      }
+
+      function restartMiniGame() {
+          gameActive = true;
+          document.getElementById('game-over-banner').style.display = 'none';
+          document.getElementById('bg-mario').style.display = 'block';
+          document.getElementById('bg-boss').style.display = 'block';
+          
+          // Clear all existing fireballs
+          document.querySelectorAll('.fireball-projectile').forEach(el => el.remove());
+          
+          initMiniGame();
+      }
+
+      function updateShieldVis() {
+        const mario = document.getElementById('bg-mario');
+        if (hasShield) mario.classList.add('shield-active');
+        else mario.classList.remove('shield-active');
+      }
+
+      function updateHealthBar() {
+        const hb = document.getElementById('mario-health-bar');
+        hb.style.width = marioHealth + '%';
+        if (marioHealth > 50) hb.style.background = '#00cc00';
+        else if (marioHealth > 25) hb.style.background = '#ffcc00';
+        else hb.style.background = '#e52521';
+      }
+
+      function updateBossHealthBar() {
+        const hb = document.getElementById('boss-health-bar');
+        hb.style.width = bossHealth + '%';
+        if (bossHealth > 50) hb.style.background = '#00cc00';
+        else if (bossHealth > 25) hb.style.background = '#ffcc00';
+        else hb.style.background = '#e52521';
         
-        // Direction towards click
-        const dir = targetX < x ? -1 : 1;
-        let vx = dir * 10; // horizontal speed
-        let vy = -6; // initial jump speed
-        const gravity = 0.6;
+        const bh = document.getElementById('boss-hearts');
+        if (bh) {
+            let hearts = '';
+            for(let i=0; i<bossLives; i++) hearts += '❤️';
+            bh.innerText = hearts;
+        }
+      }
+
+      function takeDamage() {
+        marioHealth -= 10;
+        if (marioHealth <= 0) {
+            marioHealth = 0;
+            gameActive = false;
+            clearInterval(bossAttackInterval);
+            clearInterval(powerupInterval);
+            
+            // Hide heroes
+            document.getElementById('bg-mario').style.display = 'none';
+            document.getElementById('bg-boss').style.display = 'none';
+            
+            // Show Game Over inside container
+            document.getElementById('game-over-title').innerText = "GAME OVER";
+            document.getElementById('game-over-title').style.color = "#E52521";
+            document.getElementById('game-over-banner').style.display = 'block';
+            
+            // Clear any powerup
+            document.getElementById('powerup-block').style.display = 'none';
+            if (powerupTimeout) clearTimeout(powerupTimeout);
+        }
+        updateHealthBar();
+      }
+
+      function takeBossDamage() {
+        bossHealth -= 10;
+        if (bossHealth <= 0) {
+           bossLives--;
+           if (bossLives <= 0) {
+               // You Won!
+               bossHealth = 0;
+               gameActive = false;
+               clearInterval(bossAttackInterval);
+               clearInterval(powerupInterval);
+               
+               document.getElementById('bg-mario').style.display = 'none';
+               document.getElementById('bg-boss').style.display = 'none';
+               
+               document.getElementById('game-over-title').innerText = "YOU WON!";
+               document.getElementById('game-over-title').style.color = "#00cc00";
+               document.getElementById('game-over-banner').style.display = 'block';
+               
+               document.getElementById('powerup-block').style.display = 'none';
+               if (powerupTimeout) clearTimeout(powerupTimeout);
+           } else {
+               bossHealth = 100; // Boss respawns/recovers
+           }
+        }
+        updateBossHealthBar();
+      }
+
+      let powerupTimeout = null;
+
+      function spawnPowerup() {
+        const block = document.getElementById('powerup-block');
+        // Random position in the top half of the screen
+        const x = Math.floor(Math.random() * (window.innerWidth - 100)) + 50;
+        const y = Math.floor(Math.random() * (window.innerHeight / 2 - 100)) + 50;
+        block.style.left = x + 'px';
+        block.style.top = y + 'px';
+        block.style.display = 'flex';
         
-        // Ground is the footer. Let's estimate it's at the bottom
-        const groundY = window.innerHeight - 32;
+        if (powerupTimeout) clearTimeout(powerupTimeout);
+        powerupTimeout = setTimeout(() => {
+            block.style.display = 'none';
+        }, 3000);
+      }
+
+      function collectPowerup() {
+        const block = document.getElementById('powerup-block');
+        block.style.display = 'none';
+        if (powerupTimeout) clearTimeout(powerupTimeout);
+        
+        powerLevel++;
+        // Visual cue for leveling up
+        const mario = document.getElementById('bg-mario');
+        mario.style.filter = 'brightness(2) drop-shadow(0 0 10px #ffff00)';
+        setTimeout(() => { mario.style.filter = ''; }, 500);
+      }
+
+      function shootFireball(isMarioShooting, power = 1) {
+        if (!gameActive) return;
+        const mario = document.getElementById('bg-mario');
+        const boss = document.getElementById('bg-boss');
+        if (!mario || !boss) return;
+        
+        let startElem = isMarioShooting ? mario : boss;
+        let rect = startElem.getBoundingClientRect();
+        
+        let x = isMarioShooting ? rect.right - 20 : rect.left;
+        let y = rect.top + rect.height / 2 - 20;
+        
+        let vx = isMarioShooting ? 16 : -16; // speed
+        let vy = -4; // initial jump speed
+        const gravity = 0.8;
+        const groundY = document.getElementById('boss-fight-container').getBoundingClientRect().bottom;
         
         const fireball = document.createElement('div');
-        fireball.style.width = '16px';
-        fireball.style.height = '16px';
-        fireball.style.backgroundColor = '#FBD000';
-        fireball.style.border = '2px solid #E52521';
-        fireball.style.borderRadius = '50%';
+        fireball.className = 'fireball-projectile';
+        fireball.textContent = isMarioShooting ? '🔥' : '☄️';
+        fireball.style.fontSize = isMarioShooting ? (2 + power * 0.4) + 'rem' : '2rem';
         fireball.style.position = 'fixed';
         fireball.style.left = x + 'px';
         fireball.style.top = y + 'px';
-        fireball.style.zIndex = '4000';
+        fireball.style.zIndex = '0';
         fireball.style.pointerEvents = 'none';
-        fireball.style.boxShadow = '0 0 8px #E52521, inset 0 0 4px #FFFFFF';
+        fireball.style.filter = 'drop-shadow(2px 2px 0 rgba(0,0,0,0.4))';
+        if (!isMarioShooting) {
+          fireball.style.transform = 'scaleX(-1)';
+        }
         document.body.appendChild(fireball);
         
+        // Jump effect for shooter (don't interrupt if already jumping)
+        if (!(isMarioShooting && isJumping)) {
+            startElem.style.animation = 'none';
+            startElem.style.transform = isMarioShooting ? 'translateY(-30px)' : 'scaleX(-1) translateY(-30px)';
+            setTimeout(() => {
+                startElem.style.animation = '';
+                startElem.style.transform = '';
+            }, 300);
+        }
+
         function animate() {
             x += vx;
             vy += gravity;
             y += vy;
             
             // Bounce on ground
-            if (y > groundY - 16) {
-                y = groundY - 16;
+            if (y > groundY - 20) {
+                y = groundY - 20;
                 vy = -12; // bounce strength
             }
             
             fireball.style.left = x + 'px';
             fireball.style.top = y + 'px';
             
-            // Remove if completely off screen horizontally
-            if (x < -50 || x > window.innerWidth + 50) {
+            // Check collision
+            const enemy = isMarioShooting ? boss : mario;
+            const eRect = enemy.getBoundingClientRect();
+            
+            if (x + 20 > eRect.left && x < eRect.right && y + 20 > eRect.top && y < eRect.bottom) {
+                fireball.remove();
+                
+                let applyHitEffect = true;
+
+                if (!isMarioShooting) { // Boss hit Mario
+                   if (hasShield) {
+                       // Blocked!
+                       applyHitEffect = false;
+                   } else {
+                       takeDamage();
+                   }
+                } else { // Mario hit Boss
+                   takeBossDamage();
+                }
+
+                // Hit effect
+                if (applyHitEffect) {
+                    enemy.style.animation = 'none';
+                    enemy.style.filter = 'brightness(2) drop-shadow(4px 4px 0 rgba(255,0,0,0.8))';
+                    enemy.style.transform = isMarioShooting ? 'scaleX(-1) rotate(20deg) scale(0.9)' : 'rotate(-20deg) scale(0.9)';
+                    setTimeout(() => {
+                        enemy.style.filter = '';
+                        enemy.style.transform = '';
+                        enemy.style.animation = '';
+                    }, 300);
+                }
+                return;
+            }
+            
+            if (x < -100 || x > window.innerWidth + 100) {
                 fireball.remove();
                 return;
             }
@@ -1639,17 +2047,60 @@
         requestAnimationFrame(animate);
       }
 
+      document.addEventListener('keydown', (e) => {
+        if (!gameActive) return;
+        if (e.code === 'Space') {
+          e.preventDefault();
+          if (!isJumping) {
+             isJumping = true;
+             
+             const mario = document.getElementById('bg-mario');
+             mario.style.animation = 'none';
+             mario.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1)';
+             mario.style.transform = 'translateY(-150px)';
+             setTimeout(() => {
+               mario.style.transition = 'transform 0.3s cubic-bezier(0.6, 0, 0.8, 0.2)';
+               mario.style.transform = 'translateY(0)';
+               setTimeout(() => {
+                 mario.style.transition = '';
+                 mario.style.animation = ''; // restores bounce
+                 isJumping = false;
+               }, 300);
+             }, 400);
+          }
+        }
+        if (e.code === 'Escape') {
+             hasShield = true; // Defense shield reappears
+             updateShieldVis();
+        }
+      });
+
       document.addEventListener('click', (e) => {
-        // Only trigger if we clicked a blank area (not a button, link, or input)
+        if (!gameActive) return;
         const isInteractive = e.target.closest('button') || 
                               e.target.closest('a') || 
                               e.target.closest('textarea') || 
                               e.target.closest('#genie-container') ||
-                              e.target.closest('.modal-content');
+                              e.target.closest('#powerup-block') ||
+                              e.target.closest('.modal-content') ||
+                              e.target.closest('.header') ||
+                              e.target.closest('.footer');
         if (isInteractive) return;
         
-        shootFireball(e.clientX);
+        // Mario attacks on any non-interactive click
+        hasShield = false; // Shield disappears when attacking
+        updateShieldVis();
+        
+        // If power level > 1, shoot multiple fireballs!
+        for (let i = 0; i < powerLevel; i++) {
+            setTimeout(() => {
+                shootFireball(true, powerLevel);
+            }, i * 200);
+        }
       });
+
+      // Start game on load
+      window.addEventListener('load', initMiniGame);
     </script>
 
   </body>
