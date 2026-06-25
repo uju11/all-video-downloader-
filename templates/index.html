@@ -900,20 +900,31 @@
       .ios-toast-body strong { color: var(--ink); }
 
       /* ── GENIE POPUP ── */
-      #genie-popup {
+      #genie-container {
         position: fixed;
-        bottom: -420px;
+        bottom: 24px;
         right: 24px;
         z-index: 3000;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        pointer-events: none;
+      }
+
+      #genie-popup {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        transform-origin: bottom right;
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
         pointer-events: none;
       }
 
       #genie-popup.visible {
-        bottom: 24px;
+        opacity: 1;
+        transform: translateY(0) scale(1);
         pointer-events: all;
       }
 
@@ -1004,30 +1015,31 @@
       .genie-character {
         font-size: 3.2rem;
         text-align: right;
-        margin-right: 0.8rem;
+        margin-right: 1.8rem;
+        margin-bottom: -1.2rem;
         animation: genieFloat 3s ease-in-out infinite;
         filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.25));
         line-height: 1;
+        z-index: 1;
       }
 
       .genie-lamp {
-        font-size: 1.6rem;
-        margin-right: 1rem;
-        animation: lampWiggle 4s ease-in-out infinite;
-        display: inline-block;
+        font-size: 2.2rem;
+        margin-right: 0.5rem;
+        cursor: pointer;
+        pointer-events: all;
+        transition: transform 0.2s;
+        z-index: 2;
+        filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.15));
+      }
+
+      .genie-lamp:hover {
+        transform: scale(1.1) rotate(-5deg);
       }
 
       @keyframes genieFloat {
         0%, 100% { transform: translateY(0) rotate(-3deg); }
         50% { transform: translateY(-10px) rotate(3deg); }
-      }
-
-      @keyframes lampWiggle {
-        0%, 100% { transform: rotate(0deg); }
-        20% { transform: rotate(-8deg); }
-        40% { transform: rotate(8deg); }
-        60% { transform: rotate(-4deg); }
-        80% { transform: rotate(4deg); }
       }
 
       .genie-progress {
@@ -1036,6 +1048,10 @@
         border-radius: 2px;
         margin-top: 0.8rem;
         transform-origin: left;
+        transform: scaleX(1);
+      }
+
+      .genie-progress.animating {
         animation: genieCountdown 12s linear forwards;
       }
 
@@ -1045,7 +1061,7 @@
       }
 
       @media (max-width: 480px) {
-        #genie-popup { right: 12px; }
+        #genie-container { right: 12px; }
         .genie-bubble { max-width: 240px; }
       }
 
@@ -1061,9 +1077,8 @@
           <h1>Vid<span>Snatch</span>!</h1>
         </div>
         <ul class="nav-links">
-          <li><a href="#" class="active">Downloads</a></li>
-          <li><a href="#">History</a></li>
-          <li><a href="#">Settings</a></li>
+          <li><a href="#" class="active" id="nav-downloads" onclick="switchTab('downloads')">Downloads</a></li>
+          <li><a href="#" id="nav-history" onclick="switchTab('history')">History</a></li>
         </ul>
       </div>
       <div class="header-badge">
@@ -1083,7 +1098,7 @@
     <main class="content">
 
       <!-- INPUT PANEL -->
-      <div class="input-panel">
+      <div id="downloads-panel" class="input-panel">
         <div class="panel-title">
           <i class="fas fa-link"></i>
           Paste Your URLs
@@ -1103,33 +1118,32 @@
         </div>
       </div>
 
-      <!-- QUEUE PANEL -->
-      <div class="queue-panel">
+      <!-- HISTORY PANEL (Hidden by default, shown via tabs) -->
+      <div id="history-panel" class="queue-panel" style="display:none;">
         <div class="queue-header">
           <div class="queue-title">
-            <i class="fas fa-list-check"></i>
-            Download Queue
+            <i class="fas fa-history"></i>
+            Download History
           </div>
-          <button id="clearAllBtn" class="btn btn-secondary btn-sm">
-            <i class="fas fa-trash"></i> Clear All
+          <button id="clearHistoryBtn" class="btn btn-secondary btn-sm" onclick="clearHistory()">
+            <i class="fas fa-trash"></i> Clear History
           </button>
         </div>
 
-        <div id="tasksEmpty" class="tasks-empty">
+        <div id="historyEmpty" class="tasks-empty">
           <span class="empty-doodle">📭</span>
-          <p>Nothing here yet, hero!</p>
-          <p style="font-family:'Comic Neue',cursive; font-size:0.9rem; margin-top:0.4rem; color:#aaa;">Paste a URL above and smash that button! 💪</p>
+          <p>No history yet!</p>
+          <p style="font-family:'Comic Neue',cursive; font-size:0.9rem; margin-top:0.4rem; color:#aaa;">Go to Downloads and grab some videos! 💪</p>
         </div>
 
-        <div id="tasksTableWrap" class="table-wrap" style="display:none;">
-          <table id="tasks">
+        <div id="historyTableWrap" class="table-wrap" style="display:none;">
+          <table id="history">
             <thead>
               <tr>
-                <th style="width:6%;">ID</th>
-                <th style="width:28%;">URL</th>
-                <th style="width:30%;">Progress</th>
-                <th style="width:16%;">Status</th>
-                <th style="width:20%;">Action</th>
+                <th style="width:30%;">Title</th>
+                <th style="width:40%;">URL</th>
+                <th style="width:15%;">Date</th>
+                <th style="width:15%;">Action</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -1220,56 +1234,123 @@
     <script>
       const startBtn      = document.getElementById('start');
       const clearBtn      = document.getElementById('clear');
-      const clearAllBtn   = document.getElementById('clearAllBtn');
       const urlsEl        = document.getElementById('urls');
-      const tasksTable    = document.getElementById('tasks');
-      const tasksTableWrap= document.getElementById('tasksTableWrap');
-      const tasksEmpty    = document.getElementById('tasksEmpty');
-      const tbody         = document.querySelector('#tasks tbody');
+      
+      const downloadsPanel= document.getElementById('downloads-panel');
+      const historyPanel  = document.getElementById('history-panel');
+      const navDownloads  = document.getElementById('nav-downloads');
+      const navHistory    = document.getElementById('nav-history');
+
+      const historyTableWrap = document.getElementById('historyTableWrap');
+      const historyEmpty     = document.getElementById('historyEmpty');
+      const historyTbody     = document.querySelector('#history tbody');
+      
       const modal         = document.getElementById('previewModal');
       const confirmModal  = document.getElementById('confirmModal');
       const confirmTitle  = document.getElementById('confirmTitle');
       const confirmMessage= document.getElementById('confirmMessage');
       const confirmOkBtn  = document.getElementById('confirmOkBtn');
 
-      let pendingUrls = [];
       let currentPreviewUrl = '';
+      let currentPreviewTitle = '';
       let confirmCallback = null;
 
-      clearBtn.onclick = () => {
-        showConfirmModal('Clear URLs', 'Clear all URLs from the input field?', () => {
-          urlsEl.value = '';
-          urlsEl.focus();
-        });
-      };
+      /* ── TABS ── */
+      function switchTab(tab) {
+        if (tab === 'downloads') {
+          navDownloads.classList.add('active');
+          navHistory.classList.remove('active');
+          downloadsPanel.style.display = 'block';
+          historyPanel.style.display = 'none';
+        } else {
+          navHistory.classList.add('active');
+          navDownloads.classList.remove('active');
+          historyPanel.style.display = 'block';
+          downloadsPanel.style.display = 'none';
+          renderHistory();
+        }
+      }
 
-      clearAllBtn.onclick = async () => {
-        showConfirmModal('Clear Downloads', 'Clear all completed, error, and cancelled downloads? Running downloads will be kept.', async () => {
-          try {
-            const res = await fetch('/clear_all', { method: 'POST' });
-            if (res.ok) pollStatus();
-            else alert('Error clearing downloads');
-          } catch (e) {
-            alert('Failed to clear: ' + e.message);
-          }
+      /* ── HISTORY LOGIC ── */
+      function getHistory() {
+        try {
+          return JSON.parse(localStorage.getItem('vidsnatch_history')) || [];
+        } catch { return []; }
+      }
+
+      function saveHistory(title, url) {
+        const history = getHistory();
+        history.unshift({
+          id: Date.now().toString(),
+          title: title,
+          url: url,
+          date: new Date().toISOString()
         });
+        localStorage.setItem('vidsnatch_history', JSON.stringify(history.slice(0, 50))); // Keep last 50
+      }
+
+      function clearHistory() {
+        showConfirmModal('Clear History', 'Are you sure you want to clear your download history?', () => {
+          localStorage.removeItem('vidsnatch_history');
+          renderHistory();
+        });
+      }
+
+      function removeFromHistory(id) {
+        let history = getHistory();
+        history = history.filter(item => item.id !== id);
+        localStorage.setItem('vidsnatch_history', JSON.stringify(history));
+        renderHistory();
+      }
+
+      function renderHistory() {
+        const history = getHistory();
+        if (history.length === 0) {
+          historyTableWrap.style.display = 'none';
+          historyEmpty.style.display = 'block';
+          return;
+        }
+
+        historyTableWrap.style.display = 'block';
+        historyEmpty.style.display = 'none';
+        historyTbody.innerHTML = '';
+
+        history.forEach(item => {
+          const tr = document.createElement('tr');
+          const date = new Date(item.date).toLocaleDateString() + ' ' + new Date(item.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          
+          let action = '<a href="/stream?url=' + encodeURIComponent(item.url) + '" class="btn btn-green btn-sm" target="_blank"><i class="fas fa-download"></i> Get Again</a>' +
+                       '<button class="btn btn-secondary btn-sm" onclick="removeFromHistory(\'' + item.id + '\')" style="margin-left:0.4rem;">x</button>';
+
+          tr.innerHTML = '<td data-label="Title"><strong>' + escapeHtml(item.title) + '</strong></td>' +
+            '<td data-label="URL" class="url-cell" title="' + escapeHtml(item.url) + '">' + escapeHtml(item.url) + '</td>' +
+            '<td data-label="Date">' + date + '</td>' +
+            '<td class="action-cell">' + action + '</td>';
+          historyTbody.appendChild(tr);
+        });
+      }
+
+      /* ── APP LOGIC ── */
+      clearBtn.onclick = () => {
+        urlsEl.value = '';
+        urlsEl.focus();
       };
 
       startBtn.onclick = async () => {
         const raw = urlsEl.value.trim();
         if (!raw) {
-          alert('Paste at least one URL first, hero!');
+          alert('Paste a URL first, hero!');
           urlsEl.focus();
           return;
         }
-        const urls = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-        if (urls.length === 0) {
-          alert('No valid URLs found!');
+        // Take just the first line for direct streaming
+        const url = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
+        if (!url) {
+          alert('No valid URL found!');
           return;
         }
-        pendingUrls = urls;
-        currentPreviewUrl = urls[0];
-        showPreviewModal(urls[0]);
+        currentPreviewUrl = url;
+        showPreviewModal(url);
       };
 
       async function showPreviewModal(url) {
@@ -1291,6 +1372,8 @@
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || 'Failed to fetch video info');
 
+          currentPreviewTitle = data.title;
+
           document.getElementById('previewThumbnail').src = data.thumbnail || '';
           document.getElementById('previewTitle').textContent    = data.title;
           document.getElementById('previewDuration').textContent = formatTime(data.duration);
@@ -1309,8 +1392,8 @@
 
       function closePreviewModal() {
         modal.classList.remove('active');
-        pendingUrls = [];
         currentPreviewUrl = '';
+        currentPreviewTitle = '';
       }
 
       function showConfirmModal(title, message, callback) {
@@ -1331,109 +1414,21 @@
       };
 
       async function confirmDownload() {
-        if (!pendingUrls.length) return;
-        const downloadBtn = document.getElementById('confirmDownloadBtn');
-        downloadBtn.disabled = true;
-        try {
-          const res = await fetch('/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ urls: pendingUrls })
-          });
-          if (res.ok) {
-            closePreviewModal();
-            urlsEl.value = '';
-            pollStatus();
-          } else {
-            alert('Error submitting downloads');
-          }
-        } catch (e) {
-          alert('Error: ' + e.message);
-        } finally {
-          downloadBtn.disabled = false;
+        if (!currentPreviewUrl) return;
+        
+        // Save to local history
+        saveHistory(currentPreviewTitle || 'Unknown Video', currentPreviewUrl);
+        
+        // Trigger browser download via stream endpoint
+        if (isIOS()) {
+          iosDownload('/stream?url=' + encodeURIComponent(currentPreviewUrl));
+        } else {
+          window.location.href = '/stream?url=' + encodeURIComponent(currentPreviewUrl);
         }
-      }
-
-      async function pollStatus() {
-        const res  = await fetch('/status');
-        const data = await res.json();
-        const taskIds = Object.keys(data);
-
-        if (taskIds.length === 0) {
-          tasksTableWrap.style.display = 'none';
-          tasksEmpty.style.display     = 'block';
-          return;
-        }
-
-        tasksTableWrap.style.display = 'block';
-        tasksEmpty.style.display     = 'none';
-        tbody.innerHTML = '';
-
-        taskIds.forEach(id => {
-          const info    = data[id];
-          const tr      = document.createElement('tr');
-          const shortId = id.substring(0, 8);
-
-          const statusBadge = '<span class="status-badge status-' + info.status + '">' +
-            '<i class="fas fa-' + getStatusIcon(info.status) + '"></i> ' +
-            capitalizeFirst(info.status) + '</span>';
-
-          const progress  = info.progress || 0;
-          const speed     = info.speed    || 0;
-          const eta       = info.eta      || 0;
-          const speedText = speed > 0 ? formatSpeed(speed) : '-';
-          const etaText   = eta   > 0 ? formatTime(eta)   : '-';
-
-          let progressHtml;
-          if (info.status === 'running' || info.status === 'queued') {
-            progressHtml = '<div>' +
-              '<div class="progress-bar"><div class="progress-fill" style="width:' + progress + '%"></div></div>' +
-              '<div class="progress-text"><span>' + progress + '%</span><span>' + speedText + '</span><span>ETA: ' + etaText + '</span></div>' +
-              '</div>';
-          } else if (info.status === 'completed') {
-            progressHtml = '<span style="color:var(--green); font-weight:700;"><i class="fas fa-check-circle"></i> Done!</span>';
-          } else {
-            progressHtml = '<span style="color:var(--red); font-weight:700;"><i class="fas fa-times-circle"></i> Failed</span>';
-          }
-
-          let action = '';
-          if (info.status === 'completed' && info.filename) {
-            if (isIOS()) {
-              // iOS Safari blocks direct downloads — open in new tab + guide user to Share → Save to Files
-              action = '<button class="btn btn-green btn-sm" onclick="iosDownload(\'/download/' + id + '\')">' +
-                '<i class="fas fa-download"></i> Get</button>' +
-                '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
-            } else {
-              action = '<a href="/download/' + id + '" class="btn btn-green btn-sm download-link"><i class="fas fa-download"></i> Get</a>' +
-                '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
-            }
-          } else if (info.status === 'running') {
-            action = '<button class="btn btn-primary btn-sm" onclick="cancelDownload(\'' + id + '\')"><i class="fas fa-stop"></i> Stop</button>';
-          } else if (info.status === 'queued') {
-            action = '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')"><i class="fas fa-trash"></i> Remove</button>';
-          } else if (info.status === 'cancelled') {
-            action = '<button class="btn btn-orange btn-sm" onclick="restartDownload(\'' + id + '\')" style="margin-right:0.4rem;"><i class="fas fa-rotate-right"></i> Restart</button>' +
-              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')">x</button>';
-          } else if (info.status === 'error') {
-            action = '<button class="btn btn-orange btn-sm" onclick="restartDownload(\'' + id + '\')" style="margin-right:0.4rem;"><i class="fas fa-rotate-right"></i> Retry</button>' +
-              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')">x</button>';
-          }
-
-          tr.innerHTML = '<td data-label="ID"><span class="task-id">' + shortId + '</span></td>' +
-            '<td data-label="URL" class="url-cell" title="' + escapeHtml(info.url || '') + '">' + escapeHtml(info.url || '') + '</td>' +
-            '<td data-label="Progress">' + progressHtml + '</td>' +
-            '<td>' + statusBadge + '</td>' +
-            '<td class="action-cell">' + action + '</td>';
-          tbody.appendChild(tr);
-        });
-
-        setTimeout(pollStatus, 1000);
-      }
-
-      function formatSpeed(bytesPerSec) {
-        if (bytesPerSec < 1024)         return bytesPerSec.toFixed(0) + ' B/s';
-        if (bytesPerSec < 1024 * 1024) return (bytesPerSec / 1024).toFixed(1) + ' KB/s';
-        return (bytesPerSec / (1024 * 1024)).toFixed(1) + ' MB/s';
+        
+        closePreviewModal();
+        urlsEl.value = '';
+        switchTab('history');
       }
 
       function formatTime(seconds) {
@@ -1451,55 +1446,6 @@
         return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
       }
 
-      function getStatusIcon(status) {
-        const icons = { queued: 'hourglass-half', running: 'spinner', completed: 'check', error: 'exclamation-triangle', cancelled: 'ban' };
-        return icons[status] || 'circle';
-      }
-
-      async function cancelDownload(taskId) {
-        showConfirmModal('Stop Download', 'Stop this download? (You can restart it later)', async () => {
-          try {
-            const res = await fetch('/cancel/' + taskId, { method: 'POST' });
-            if (res.ok) pollStatus();
-            else alert('Error cancelling download');
-          } catch (e) {
-            alert('Failed to cancel: ' + e.message);
-          }
-        });
-      }
-
-      async function removeTask(taskId) {
-        showConfirmModal('Remove Task', 'Remove this task from the queue?', async () => {
-          try {
-            const res = await fetch('/remove/' + taskId, { method: 'POST' });
-            if (res.ok) {
-              pollStatus();
-            } else {
-              const data = await res.json();
-              alert(data.error || 'Error removing task');
-            }
-          } catch (e) {
-            alert('Failed to remove: ' + e.message);
-          }
-        });
-      }
-
-      async function restartDownload(taskId) {
-        showConfirmModal('Restart Download', 'Restart this download?', async () => {
-          try {
-            const res = await fetch('/restart/' + taskId, { method: 'POST' });
-            if (res.ok) {
-              pollStatus();
-            } else {
-              const data = await res.json();
-              alert(data.error || 'Error restarting download');
-            }
-          } catch (e) {
-            alert('Failed to restart: ' + e.message);
-          }
-        });
-      }
-
       /* ── iOS Detection & Download Handler ── */
       function isIOS() {
         return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -1507,8 +1453,6 @@
       }
 
       function iosDownload(url) {
-        // Open the file URL in a new tab — iOS Safari shows its media player
-        // with the Share sheet, allowing "Save to Files" or "Save to Photos"
         window.open(url, '_blank');
         showIOSToast();
       }
@@ -1517,10 +1461,6 @@
         const toast = document.getElementById('iosToast');
         toast.classList.add('visible');
         setTimeout(() => toast.classList.remove('visible'), 5000);
-      }
-
-      function capitalizeFirst(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
       }
 
       function escapeHtml(text) {
@@ -1533,8 +1473,6 @@
         if (event.target === modal)        closePreviewModal();
         if (event.target === confirmModal) closeConfirmModal();
       };
-
-      pollStatus();
     </script>
     <!-- iOS Save-to-Files Toast -->
     <div id="iosToast">
@@ -1545,57 +1483,68 @@
       </div>
     </div>
     <!-- GENIE POPUP -->
-    <div id="genie-popup">
-      <div class="genie-bubble">
-        <button class="genie-close" onclick="dismissGenie()" title="Close">×</button>
-        <div class="genie-bubble-title">🧞 Hey there, traveller!</div>
-        <div class="genie-tip">
-          <span class="genie-tip-icon">⚡</span>
-          <span>This app runs on a <strong>FREE server</strong> — it may take 30–50s to wake up!</span>
+    <div id="genie-container">
+      <div id="genie-popup">
+        <div class="genie-bubble">
+          <button class="genie-close" onclick="dismissGenie()" title="Close">×</button>
+          <div class="genie-bubble-title">🧞 Hey there, traveller!</div>
+          <div class="genie-tip">
+            <span class="genie-tip-icon">⚡</span>
+            <span>This app runs on a <strong>FREE server</strong> — it may take 30–50s to wake up!</span>
+          </div>
+          <div class="genie-tip">
+            <span class="genie-tip-icon">📥</span>
+            <span>Keep downloads to <strong>1–2 at a time</strong> to avoid overloading the server.</span>
+          </div>
+          <div class="genie-tip">
+            <span class="genie-tip-icon">💾</span>
+            <span>Keep file sizes <strong>below 100MB</strong> — bigger files may time out or fail.</span>
+          </div>
+          <div class="genie-tip">
+            <span class="genie-tip-icon">📺</span>
+            <span>YouTube videos max out at <strong>720p</strong>. Other sites are full HD!</span>
+          </div>
+          <div class="genie-tip">
+            <span class="genie-tip-icon">🎬</span>
+            <span>Works with YouTube, Vimeo, TikTok, Reddit & more!</span>
+          </div>
+          <div class="genie-progress" id="genieProgress"></div>
         </div>
-        <div class="genie-tip">
-          <span class="genie-tip-icon">📥</span>
-          <span>Keep downloads to <strong>1–2 at a time</strong> to avoid overloading the server.</span>
-        </div>
-        <div class="genie-tip">
-          <span class="genie-tip-icon">💾</span>
-          <span>Keep file sizes <strong>below 100MB</strong> — bigger files may time out or fail.</span>
-        </div>
-        <div class="genie-tip">
-          <span class="genie-tip-icon">⏰</span>
-          <span>Downloaded files are <strong>auto-deleted after 1 hour</strong> — grab them fast!</span>
-        </div>
-        <div class="genie-tip">
-          <span class="genie-tip-icon">🎬</span>
-          <span>Works with YouTube, Vimeo, TikTok, Reddit & more!</span>
-        </div>
-        <div class="genie-progress" id="genieProgress"></div>
+        <div class="genie-character">🧞</div>
       </div>
-      <div>
-        <span class="genie-character">🧞</span>
-        <span class="genie-lamp">🪔</span>
-      </div>
+      <div class="genie-lamp" onclick="summonGenie()" title="Summon Genie!">🪔</div>
     </div>
 
     <script>
-      (function() {
-        // Only show once per browser session
-        if (!sessionStorage.getItem('genieSeen')) {
-          sessionStorage.setItem('genieSeen', '1');
-          setTimeout(() => {
-            document.getElementById('genie-popup').classList.add('visible');
-          }, 1200); // delay so page loads first
-          // Auto-dismiss after 12s
-          setTimeout(dismissGenie, 13200);
-        }
-      })();
+      let genieTimer = null;
+
+      function summonGenie() {
+        const popup = document.getElementById('genie-popup');
+        const progress = document.getElementById('genieProgress');
+        
+        // Reset animation
+        progress.classList.remove('animating');
+        void progress.offsetWidth; // trigger reflow
+        progress.classList.add('animating');
+        
+        popup.classList.add('visible');
+        
+        if (genieTimer) clearTimeout(genieTimer);
+        genieTimer = setTimeout(dismissGenie, 12000);
+      }
 
       function dismissGenie() {
         const popup = document.getElementById('genie-popup');
-        popup.style.transition = 'bottom 0.4s ease-in';
-        popup.style.bottom = '-420px';
-        setTimeout(() => popup.remove(), 450);
+        popup.classList.remove('visible');
       }
+
+      (function() {
+        // Only auto-show once per browser session
+        if (!sessionStorage.getItem('genieSeen')) {
+          sessionStorage.setItem('genieSeen', '1');
+          setTimeout(summonGenie, 1200);
+        }
+      })();
     </script>
 
   </body>
