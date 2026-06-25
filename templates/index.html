@@ -856,6 +856,49 @@
         .modal-content { width: 95%; }
         .modal-body { padding: 1.2rem; }
       }
+      /* iOS TOAST */
+      #iosToast {
+        position: fixed;
+        bottom: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 12px;
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 1rem 1.4rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        max-width: 320px;
+        width: 90%;
+        z-index: 2000;
+        transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      #iosToast.visible { bottom: 24px; }
+
+      .ios-toast-icon {
+        font-size: 1.6rem;
+        flex-shrink: 0;
+        animation: wobble 1.5s ease-in-out infinite;
+      }
+
+      .ios-toast-body .ios-toast-title {
+        font-family: 'Bangers', cursive;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        margin-bottom: 0.2rem;
+      }
+
+      .ios-toast-body p {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        color: #555;
+      }
+
+      .ios-toast-body strong { color: var(--ink); }
+
     </style>
   </head>
   <body>
@@ -1205,8 +1248,15 @@
 
           let action = '';
           if (info.status === 'completed' && info.filename) {
-            action = '<a href="/download/' + id + '" class="btn btn-green btn-sm download-link"><i class="fas fa-download"></i> Get</a>' +
-              '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
+            if (isIOS()) {
+              // iOS Safari blocks direct downloads — open in new tab + guide user to Share → Save to Files
+              action = '<button class="btn btn-green btn-sm" onclick="iosDownload(\'/download/' + id + '\')">' +
+                '<i class="fas fa-download"></i> Get</button>' +
+                '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
+            } else {
+              action = '<a href="/download/' + id + '" class="btn btn-green btn-sm download-link"><i class="fas fa-download"></i> Get</a>' +
+                '<button class="btn btn-secondary btn-sm" onclick="removeTask(\'' + id + '\')" style="margin-left:0.4rem;">x</button>';
+            }
           } else if (info.status === 'running') {
             action = '<button class="btn btn-primary btn-sm" onclick="cancelDownload(\'' + id + '\')"><i class="fas fa-stop"></i> Stop</button>';
           } else if (info.status === 'queued') {
@@ -1300,6 +1350,25 @@
         });
       }
 
+      /* ── iOS Detection & Download Handler ── */
+      function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS 13+
+      }
+
+      function iosDownload(url) {
+        // Open the file URL in a new tab — iOS Safari shows its media player
+        // with the Share sheet, allowing "Save to Files" or "Save to Photos"
+        window.open(url, '_blank');
+        showIOSToast();
+      }
+
+      function showIOSToast() {
+        const toast = document.getElementById('iosToast');
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 5000);
+      }
+
       function capitalizeFirst(s) {
         return s.charAt(0).toUpperCase() + s.slice(1);
       }
@@ -1317,5 +1386,14 @@
 
       pollStatus();
     </script>
+    <!-- iOS Save-to-Files Toast -->
+    <div id="iosToast">
+      <span class="ios-toast-icon">📱</span>
+      <div class="ios-toast-body">
+        <div class="ios-toast-title">Almost there!</div>
+        <p>Tap the <strong>Share</strong> button ↗ in Safari, then tap <strong>"Save to Files"</strong> or <strong>"Save to Photos"</strong> to keep it!</p>
+      </div>
+    </div>
+
   </body>
 </html>

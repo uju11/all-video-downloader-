@@ -98,6 +98,7 @@ def download_worker(url, out_dir, task_id=None):
             'retries': 10,  # More retries for unstable connections
             'fragment_retries': 10,
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'extractor_args': {'youtube': ['client=ANDROID,WEB']},
         }
         
         # Add cookie file if it exists
@@ -226,6 +227,7 @@ def fetch_info():
             'no_warnings': True,
             'socket_timeout': 10,
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'extractor_args': {'youtube': ['client=ANDROID,WEB']},
         }
         
         # Add cookie file if it exists
