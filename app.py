@@ -239,8 +239,8 @@ def fetch_info():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
         
-        # Check file size limit
-        filesize = info.get('filesize') or info.get('filesize_approx', 0)
+        # Check file size limit — both fields can be None even with a default
+        filesize = int(info.get('filesize') or info.get('filesize_approx') or 0)
         if filesize > MAX_FILE_SIZE:
             limit_mb = MAX_FILE_SIZE / 1024 / 1024
             return jsonify({'error': f'File too large ({filesize/1024/1024:.1f}MB). Max is {limit_mb:.0f}MB on this tier.'}), 400
