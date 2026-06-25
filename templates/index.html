@@ -7,24 +7,24 @@
     <meta name="description" content="Download videos from YouTube, Vimeo and more with VidSnatch — the most fun video downloader on the web!" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
       :root {
-        --ink: #1a1a2e;
-        --yellow: #FFE135;
-        --red: #FF3B3B;
-        --blue: #3B82F6;
-        --green: #22C55E;
+        --ink: #000000;
+        --yellow: #FBD000;
+        --red: #E52521;
+        --blue: #5C94FC;
+        --green: #43B047;
         --purple: #A855F7;
-        --orange: #FB923C;
-        --white: #FFFDF5;
-        --paper: #FFF9E6;
+        --orange: #C84C0C;
+        --white: #FFFFFF;
+        --paper: #5C94FC;
         --border: 3px solid var(--ink);
         --border-thick: 4px solid var(--ink);
-        --shadow: 5px 5px 0 var(--ink);
-        --shadow-sm: 3px 3px 0 var(--ink);
-        --radius: 8px;
+        --shadow: 4px 4px 0 rgba(0,0,0,0.5);
+        --shadow-sm: 2px 2px 0 rgba(0,0,0,0.5);
+        --radius: 0px;
       }
 
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,8 +32,6 @@
       body {
         font-family: 'Comic Neue', cursive;
         background-color: var(--paper);
-        background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px);
-        background-size: 24px 24px;
         min-height: 100vh;
         color: var(--ink);
         overflow-x: hidden;
@@ -41,7 +39,7 @@
 
       /* HEADER */
       .header {
-        background: var(--yellow);
+        background: var(--red);
         border-bottom: var(--border-thick);
         padding: 1rem 2rem;
         display: flex;
@@ -90,16 +88,16 @@
       }
 
       .header h1 {
-        font-family: 'Bangers', cursive;
-        font-size: 2.2rem;
-        letter-spacing: 2px;
-        color: var(--ink);
-        text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+        color: var(--white);
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.5);
         white-space: nowrap;
-        line-height: 1;
+        line-height: 1.4;
       }
 
-      .header h1 span { color: var(--red); }
+      .header h1 span { color: var(--yellow); }
 
       .nav-links {
         display: flex;
@@ -108,32 +106,32 @@
       }
 
       .nav-links a {
-        font-family: 'Bangers', cursive;
-        font-size: 1.1rem;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.8rem;
         letter-spacing: 1px;
-        color: var(--ink);
+        color: var(--white);
         text-decoration: none;
-        padding: 0.3rem 0.8rem;
+        padding: 0.5rem 0.8rem;
         border: 2px solid transparent;
-        border-radius: 20px;
         transition: all 0.15s;
+        text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
       }
 
       .nav-links a:hover, .nav-links a.active {
-        background: var(--ink);
-        color: var(--yellow);
+        background: var(--yellow);
+        color: var(--ink);
         border-color: var(--ink);
+        text-shadow: none;
       }
 
       .header-badge {
-        background: var(--red);
-        color: white;
-        font-family: 'Bangers', cursive;
-        font-size: 0.95rem;
+        background: var(--yellow);
+        color: var(--ink);
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.6rem;
         letter-spacing: 1px;
         padding: 0.4rem 1rem;
         border: var(--border);
-        border-radius: 20px;
         box-shadow: var(--shadow-sm);
         white-space: nowrap;
         z-index: 1;
@@ -682,40 +680,59 @@
 
       /* FOOTER */
       .footer {
-        background: var(--ink);
-        color: var(--yellow);
-        padding: 1.2rem 2rem;
+        margin-top: auto;
+        padding: 0;
         text-align: center;
-        margin-top: 3rem;
-        border-top: var(--border-thick);
+        background: #C84C0C; /* Ground color */
+        color: var(--white);
+      }
+
+      .ground-pattern {
+        width: 100%;
+        height: 32px;
+        background-color: #FBD000;
+        background-image: 
+          linear-gradient(45deg, #C84C0C 25%, transparent 25%, transparent 75%, #C84C0C 75%, #C84C0C),
+          linear-gradient(45deg, #C84C0C 25%, transparent 25%, transparent 75%, #C84C0C 75%, #C84C0C);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+        border-top: 4px solid #000;
+        border-bottom: 4px solid #000;
+      }
+
+      .footer-content {
+        padding: 2rem 1rem;
       }
 
       .footer-brand {
-        font-family: 'Bangers', cursive;
-        font-size: 1.3rem;
-        letter-spacing: 2px;
-        margin-bottom: 0.4rem;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+        color: var(--white);
+        margin-bottom: 0.8rem;
+        text-shadow: 2px 2px 0 var(--ink);
       }
 
-      .footer p { font-size: 0.82rem; opacity: 0.7; margin-bottom: 0.5rem; }
+      .footer p { font-size: 0.7rem; font-family: 'Press Start 2P', cursive; text-shadow: 1px 1px 0 var(--ink); line-height: 1.6; }
 
       .footer-links {
         display: flex;
         justify-content: center;
         gap: 1.5rem;
         list-style: none;
-        margin-top: 0.5rem;
+        margin-top: 1.5rem;
       }
 
       .footer-links a {
+        font-family: 'Press Start 2P', cursive;
         color: var(--yellow);
         text-decoration: none;
-        font-size: 0.82rem;
-        opacity: 0.7;
-        transition: opacity 0.2s;
+        font-size: 0.6rem;
+        transition: color 0.2s;
+        text-shadow: 1px 1px 0 var(--ink);
       }
 
-      .footer-links a:hover { opacity: 1; }
+      .footer-links a:hover { color: var(--white); }
 
       .zap-tag {
         display: inline-block;
@@ -1013,33 +1030,50 @@
       .genie-close:hover { transform: rotate(90deg); }
 
       .genie-character {
-        font-size: 3.2rem;
+        font-size: 3.5rem;
         text-align: right;
-        margin-right: 1.8rem;
-        margin-bottom: -1.2rem;
-        animation: genieFloat 3s ease-in-out infinite;
-        filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.25));
+        margin-right: 0.5rem;
+        margin-bottom: -10px;
+        animation: marioJump 3s ease-in-out infinite;
+        filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.5));
         line-height: 1;
         z-index: 1;
       }
 
       .genie-lamp {
-        font-size: 2.2rem;
-        margin-right: 0.5rem;
+        width: 60px;
+        height: 50px;
+        background: #43B047;
+        border: 4px solid #000;
+        border-bottom: none;
+        position: relative;
+        margin-right: 10px;
         cursor: pointer;
         pointer-events: all;
-        transition: transform 0.2s;
         z-index: 2;
-        filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.15));
+        box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+      }
+
+      .genie-lamp::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: -8px;
+        width: 68px;
+        height: 20px;
+        background: #43B047;
+        border: 4px solid #000;
+        box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
       }
 
       .genie-lamp:hover {
-        transform: scale(1.1) rotate(-5deg);
+        transform: scale(1.05);
       }
 
-      @keyframes genieFloat {
-        0%, 100% { transform: translateY(0) rotate(-3deg); }
-        50% { transform: translateY(-10px) rotate(3deg); }
+      @keyframes marioJump {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
       }
 
       .genie-progress {
@@ -1155,13 +1189,16 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <div class="footer-brand">⚡ VidSnatch! ⚡</div>
-      <p>© 2024 VidSnatch — Comic Video Downloader Pro</p>
-      <ul class="footer-links">
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Help Center</a></li>
-      </ul>
+      <div class="ground-pattern"></div>
+      <div class="footer-content">
+        <div class="footer-brand">🍄 VidSnatch! 🍄</div>
+        <p>© 2024 VidSnatch — Super Video Downloader</p>
+        <ul class="footer-links">
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
     </footer>
 
     <!-- Confirmation Modal -->
@@ -1482,12 +1519,12 @@
         <p>Tap the <strong>Share</strong> button ↗ in Safari, then tap <strong>"Save to Files"</strong> or <strong>"Save to Photos"</strong> to keep it!</p>
       </div>
     </div>
-    <!-- GENIE POPUP -->
+    <!-- MARIO POPUP -->
     <div id="genie-container">
       <div id="genie-popup">
         <div class="genie-bubble">
           <button class="genie-close" onclick="dismissGenie()" title="Close">×</button>
-          <div class="genie-bubble-title">🧞 Hey there, traveller!</div>
+          <div class="genie-bubble-title">🍄 It's-a me!</div>
           <div class="genie-tip">
             <span class="genie-tip-icon">⚡</span>
             <span>This app runs on a <strong>FREE server</strong> — it may take 30–50s to wake up!</span>
@@ -1510,9 +1547,9 @@
           </div>
           <div class="genie-progress" id="genieProgress"></div>
         </div>
-        <div class="genie-character">🧞</div>
+        <div class="genie-character">🍄</div>
       </div>
-      <div class="genie-lamp" onclick="summonGenie()" title="Summon Genie!">🪔</div>
+      <div class="genie-lamp" onclick="summonGenie()" title="Summon Mario!"></div>
     </div>
 
     <script>
