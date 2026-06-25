@@ -32,9 +32,24 @@
       body {
         font-family: 'Comic Neue', cursive;
         background-color: var(--paper);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 20px, transparent 21px),
+            radial-gradient(circle at 14% 22%, rgba(255,255,255,0.9) 15px, transparent 16px),
+            radial-gradient(circle at 8% 22%, rgba(255,255,255,0.9) 15px, transparent 16px),
+            radial-gradient(circle at 60% 15%, rgba(255,255,255,0.9) 25px, transparent 26px),
+            radial-gradient(circle at 65% 18%, rgba(255,255,255,0.9) 20px, transparent 21px),
+            radial-gradient(circle at 55% 18%, rgba(255,255,255,0.9) 20px, transparent 21px);
+        background-size: 800px 300px;
+        background-repeat: repeat-x;
+        animation: scrollBg 25s linear infinite;
         min-height: 100vh;
         color: var(--ink);
         overflow-x: hidden;
+      }
+
+      @keyframes scrollBg {
+        from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+        to { background-position: -800px 0, -800px 0, -800px 0, -800px 0, -800px 0, -800px 0; }
       }
 
       /* HEADER */
@@ -122,20 +137,6 @@
         color: var(--ink);
         border-color: var(--ink);
         text-shadow: none;
-      }
-
-      .header-badge {
-        background: var(--yellow);
-        color: var(--ink);
-        font-family: 'Press Start 2P', cursive;
-        font-size: 0.6rem;
-        letter-spacing: 1px;
-        padding: 0.4rem 1rem;
-        border: var(--border);
-        box-shadow: var(--shadow-sm);
-        white-space: nowrap;
-        z-index: 1;
-        transform: rotate(2deg);
       }
 
       /* HERO */
@@ -1115,9 +1116,6 @@
           <li><a href="#" id="nav-history" onclick="switchTab('history')">History</a></li>
         </ul>
       </div>
-      <div class="header-badge">
-        🎬 POW! FREE DOWNLOADS
-      </div>
     </header>
 
     <!-- HERO BANNER -->
@@ -1582,6 +1580,76 @@
           setTimeout(summonGenie, 1200);
         }
       })();
+
+      /* ── FIREBALL LOGIC ── */
+      function shootFireball(targetX) {
+        const container = document.getElementById('genie-container');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        
+        // Start from Mario's position
+        let x = rect.left + rect.width / 2;
+        let y = rect.top + 30; // approx height
+        
+        // Direction towards click
+        const dir = targetX < x ? -1 : 1;
+        let vx = dir * 10; // horizontal speed
+        let vy = -6; // initial jump speed
+        const gravity = 0.6;
+        
+        // Ground is the footer. Let's estimate it's at the bottom
+        const groundY = window.innerHeight - 32;
+        
+        const fireball = document.createElement('div');
+        fireball.style.width = '16px';
+        fireball.style.height = '16px';
+        fireball.style.backgroundColor = '#FBD000';
+        fireball.style.border = '2px solid #E52521';
+        fireball.style.borderRadius = '50%';
+        fireball.style.position = 'fixed';
+        fireball.style.left = x + 'px';
+        fireball.style.top = y + 'px';
+        fireball.style.zIndex = '4000';
+        fireball.style.pointerEvents = 'none';
+        fireball.style.boxShadow = '0 0 8px #E52521, inset 0 0 4px #FFFFFF';
+        document.body.appendChild(fireball);
+        
+        function animate() {
+            x += vx;
+            vy += gravity;
+            y += vy;
+            
+            // Bounce on ground
+            if (y > groundY - 16) {
+                y = groundY - 16;
+                vy = -12; // bounce strength
+            }
+            
+            fireball.style.left = x + 'px';
+            fireball.style.top = y + 'px';
+            
+            // Remove if completely off screen horizontally
+            if (x < -50 || x > window.innerWidth + 50) {
+                fireball.remove();
+                return;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+      }
+
+      document.addEventListener('click', (e) => {
+        // Only trigger if we clicked a blank area (not a button, link, or input)
+        const isInteractive = e.target.closest('button') || 
+                              e.target.closest('a') || 
+                              e.target.closest('textarea') || 
+                              e.target.closest('#genie-container') ||
+                              e.target.closest('.modal-content');
+        if (isInteractive) return;
+        
+        shootFireball(e.clientX);
+      });
     </script>
 
   </body>
