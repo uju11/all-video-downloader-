@@ -773,83 +773,23 @@
         .url-cell { max-width: 160px; }
       }
 
-      /* ── FORCE LANDSCAPE ON MOBILE PORTRAIT ── */
-      @media screen and (orientation: portrait) and (max-width: 900px) {
-        html {
-          overflow: hidden;
-          width: 100vw;
-          height: 100vh;
-        }
-        body {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 100vh;
-          height: 100vw;
-          transform: translate(-50%, -50%) rotate(90deg);
-          overflow: hidden !important;
-        }
-      }
-
-      /* ── COMPACT LAYOUT (NO SCROLLING) ── */
-      @media screen and (orientation: landscape) and (max-height: 500px),
-             screen and (orientation: portrait) and (max-width: 500px) {
-        
-        html, body {
-          overflow: hidden !important;
-        }
-        
-        /* Make sure body doesn't stretch past viewport */
-        body {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-        }
-
-        /* Reduce header */
-        .header { padding: 0.3rem 1rem; border-bottom-width: 2px; min-height: unset; }
-        .logo-icon { width: 32px; height: 32px; font-size: 0.9rem; }
-        .header h1 { font-size: 1.1rem; }
-        .nav-links a { font-size: 0.6rem; padding: 0.2rem 0.4rem; }
-        .hero-text { font-size: 0.8rem; }
-        .hero-stars { font-size: 0.8rem; }
-
-        /* Reduce hero & health bars */
-        .hero { padding: 0.3rem 1rem; gap: 0.3rem; border-bottom-width: 2px; }
-        .health-bar-wrapper { width: 90px; height: 10px; border-width: 2px; }
-        .hero-name { font-size: 0.5rem; }
-        #boss-hearts { font-size: 0.5rem; }
-
-        /* Reduce content (middle area) */
-        .content { padding: 0.3rem 1rem; flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 800px; margin: 0 auto; }
-        .input-panel, .queue-panel { padding: 0.6rem; margin-bottom: 0; border-width: 2px; width: 100%; box-shadow: 2px 2px 0 var(--ink); }
-        .input-panel::before, .queue-panel::before { top: -10px; font-size: 0.75rem; padding: 0.1rem 0.3rem; }
-        .panel-title { font-size: 1rem; margin-bottom: 0.3rem; padding-bottom: 0.3rem; border-bottom-width: 2px; }
-        .panel-title i { font-size: 0.9rem; }
-        textarea { min-height: 45px; padding: 0.3rem; font-size: 0.75rem; border-width: 2px; }
-        .button-group { margin-top: 0.3rem; gap: 0.5rem; }
-        .btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; border-width: 2px; box-shadow: 2px 2px 0 var(--ink); }
-
-        /* Adjust queue panel specifically */
-        .queue-header { margin-bottom: 0.3rem; padding-bottom: 0.3rem; }
-        .queue-title { font-size: 1rem; }
-        .table-wrap { max-height: 100px; overflow-y: auto; }
-        th, td { padding: 0.4rem 0.5rem; font-size: 0.75rem; }
-        .tasks-empty { padding: 1rem; }
-        .empty-doodle { font-size: 2rem; margin-bottom: 0.5rem; }
-
-        /* Reduce footer & characters */
-        .footer-content { padding: 0.3rem; }
-        .footer-brand { font-size: 0.8rem; margin-bottom: 0.2rem; }
-        .footer p { font-size: 0.45rem; line-height: 1.1; }
-        .footer-links { margin-top: 0.3rem; gap: 0.8rem; }
-        .footer-links a { font-size: 0.45rem; }
-        
-        .ground-pattern { height: 12px; background-size: 12px 12px; border-width: 2px; }
-        
-        /* Characters */
-        .fighter { width: 28px; height: 38px; }
+      /* ── MOBILE LAYOUT ── */
+      @media (max-width: 600px) {
+        /* Characters very small */
+        .fighter { width: 30px; height: 40px; }
         #boss-fight-container { padding: 0 5%; bottom: 100%; height: 120px; }
+        
+        .ground-pattern { height: 16px; background-size: 16px 16px; border-width: 3px; }
+
+        /* Make health bars and game over UI too small */
+        .hero { padding: 0.4rem 0.6rem; gap: 0.4rem; }
+        .health-bar-wrapper { width: 60px; height: 8px; border-width: 2px; }
+        .hero-name { font-size: 0.45rem; }
+        #boss-hearts { font-size: 0.45rem; }
+        
+        #game-over-banner { bottom: 60px !important; }
+        #game-over-title { font-size: 1.2rem !important; margin-bottom: 5px !important; }
+        #game-over-banner button { font-size: 0.7rem !important; padding: 4px 8px !important; border-width: 2px !important; }
 
         /* Virtual gamepad visible */
         #virtual-gamepad {
@@ -857,8 +797,8 @@
           justify-content: space-between;
           position: absolute;
           bottom: 20px;
-          left: 20px;
-          right: 20px;
+          left: 10px;
+          right: 10px;
           z-index: 100;
           pointer-events: none;
         }
@@ -867,17 +807,6 @@
           gap: 15px;
           pointer-events: auto;
         }
-
-        /* Tags and badges */
-        .zap-tag { font-size: 0.7rem; padding: 0.1rem 0.4rem; top: -10px; right: 10px; }
-        
-        /* Modals */
-        .modal-content { max-height: 90vh; }
-        .modal-header { padding: 0.6rem 1rem; }
-        .modal-header h2 { font-size: 1.2rem; }
-        .modal-body { padding: 0.8rem 1rem; max-height: 60vh; }
-        .modal-footer { padding: 0.6rem 1rem; }
-        .video-thumbnail { height: 100px; }
       }
       /* iOS TOAST */
       #iosToast {
@@ -1340,7 +1269,7 @@
         </div>
       </div>
       
-      <div class="ground-pattern" style="width: 200%; margin-left: -50%; position: relative;"></div>
+      <div class="ground-pattern"></div>
       
       <!-- VIRTUAL GAMEPAD -->
       <div id="virtual-gamepad">
