@@ -401,6 +401,114 @@
         transition: box-shadow 0.2s, border-color 0.2s;
         outline: none;
       }
+      
+      .slide-down-into-pipe {
+        animation: comicalSuck 2s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        pointer-events: none;
+      }
+      
+      .slide-up-from-pipe {
+        animation: comicalSpit 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+      
+      @keyframes comicalSuck {
+        0% { transform: translateY(0) scale(1) rotate(0); opacity: 1; }
+        10% { transform: translateY(-30px) scale(1.02) rotate(-2deg); opacity: 1; }
+        20% { transform: translateY(-30px) scale(1.05) rotate(3deg); opacity: 1; }
+        30% { transform: translateY(-30px) scale(1.02) rotate(-3deg); opacity: 1; }
+        40% { transform: translateY(-30px) scale(1.05) rotate(2deg); opacity: 1; }
+        100% { transform: translate(40vw, 90vh) scale(0) rotate(540deg); opacity: 0; }
+      }
+
+      @keyframes comicalSpit {
+        0% { transform: translate(40vw, 90vh) scale(0) rotate(-540deg); opacity: 0; }
+        70% { transform: translate(0, -20px) scale(1.05) rotate(5deg); opacity: 1; }
+        85% { transform: translate(0, 0) scale(0.98) rotate(-2deg); opacity: 1; }
+        100% { transform: translate(0, 0) scale(1) rotate(0); opacity: 1; }
+      }
+      
+      .piranha-container {
+        position: absolute;
+        bottom: 100%;
+        margin-bottom: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 80px;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      
+      #piranha-plant {
+        position: absolute;
+        bottom: -60px; /* hidden entirely */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 48px;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24'%3E%3Crect x='6' y='12' width='4' height='12' fill='%2300AA00'/%3E%3Crect x='2' y='15' width='4' height='2' fill='%2300AA00'/%3E%3Crect x='3' y='17' width='3' height='1' fill='%2300AA00'/%3E%3Crect x='10' y='17' width='4' height='2' fill='%2300AA00'/%3E%3Crect x='10' y='19' width='3' height='1' fill='%2300AA00'/%3E%3Crect x='2' y='6' width='12' height='6' fill='%23E52521'/%3E%3Crect x='3' y='12' width='10' height='2' fill='%23E52521'/%3E%3Crect x='5' y='14' width='6' height='1' fill='%23E52521'/%3E%3Crect x='1' y='6' width='14' height='2' fill='%23FFFFFF'/%3E%3Crect x='2' y='5' width='12' height='1' fill='%23FFFFFF'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='4' y='9' width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='10' y='10' width='2' height='2' fill='%23FFFFFF'/%3E%3Crect x='7' y='12' width='2' height='1' fill='%23FFFFFF'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        image-rendering: pixelated;
+        animation: piranhaBite 2s ease-in-out infinite;
+        filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
+      }
+      
+      @keyframes piranhaBite {
+        0%, 15% { bottom: -60px; }
+        40%, 60% { bottom: -5px; }
+        85%, 100% { bottom: -60px; }
+      }
+
+      .piranha-dialog {
+        position: absolute;
+        bottom: 80px;
+        right: -20px;
+        background: var(--white);
+        border: var(--border-thick);
+        border-radius: 12px;
+        padding: 0.6rem 0.8rem;
+        box-shadow: 4px 4px 0 var(--ink);
+        font-family: 'Comic Neue', cursive;
+        font-weight: bold;
+        font-size: 0.85rem;
+        color: var(--ink);
+        width: 150px;
+        text-align: center;
+        z-index: 5;
+        pointer-events: none;
+        animation: floatDialog 2s ease-in-out infinite;
+      }
+      
+      .piranha-dialog::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        right: 35px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid var(--ink);
+      }
+      
+      .piranha-dialog::before {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        right: 37px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid var(--white);
+        z-index: 1;
+      }
+      
+      @keyframes floatDialog {
+        0%, 100% { transform: translateY(0) rotate(2deg); }
+        50% { transform: translateY(-5px) rotate(-2deg); }
+      }
 
       textarea:focus {
         border-color: var(--blue);
@@ -1204,7 +1312,7 @@
         pointer-events: all;
         z-index: 2;
         box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
-        transition: transform 0.2s;
+        transition: transform 0.2s, background 0.3s;
       }
 
       .genie-lamp::before {
@@ -1217,6 +1325,16 @@
         background: #43B047;
         border: 4px solid #000;
         box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
+        transition: background 0.3s;
+        z-index: 2;
+      }
+      
+      .genie-lamp.game-mode {
+        background: #E52521;
+      }
+      
+      .genie-lamp.game-mode::before {
+        background: #E52521;
       }
 
       .genie-lamp:hover {
@@ -1226,6 +1344,18 @@
       @keyframes marioJump {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-15px); }
+      }
+      
+      @keyframes marioDance {
+        0% { transform: translateY(0) rotate(-15deg) scaleX(1); }
+        50% { transform: translateY(-15px) rotate(0deg) scaleX(1); }
+        50.1% { transform: translateY(-15px) rotate(0deg) scaleX(-1); }
+        100% { transform: translateY(0) rotate(15deg) scaleX(-1); }
+      }
+      
+      @keyframes marioShock {
+        0% { transform: translateX(-3px) scale(0.95); }
+        100% { transform: translateX(3px) scale(0.95); }
       }
 
       .genie-progress {
@@ -1440,7 +1570,7 @@
             <i class="fas fa-eraser"></i> Clear
           </button>
           <div id="runner-start-screen" style="display:none; margin-left: auto;">
-            <button onclick="startGame()" class="btn btn-green" style="font-family:'Press Start 2P', cursive; font-size: 1rem; text-shadow: 1px 1px 0 #000; padding: 0.75rem 1.8rem;">
+            <button onclick="startGame()" class="btn btn-green">
               <i class="fas fa-gamepad"></i> START GAME
             </button>
           </div>
@@ -1484,6 +1614,7 @@
 
     <!-- FOOTER -->
     <footer class="footer" style="width: 100%; position: relative;">
+      
       <!-- BOSS FIGHT BACKGROUND -->
       <div id="boss-fight-container" style="position: absolute; bottom: 100%; left: 0; width: 100%; padding: 0 5%; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; pointer-events: none;">
         <div id="score-board">SCORE: <span id="runner-score">0</span></div>
@@ -1778,6 +1909,39 @@
           showToast('No valid URL found!');
           return;
         }
+        
+        // Link Detection
+        const lowerUrl = url.toLowerCase();
+        let customMsg = '';
+        let animName = 'marioJump 3s ease-in-out infinite';
+        let filterStr = 'drop-shadow(2px 3px 0 rgba(0,0,0,0.5))';
+        
+        const adultKeywords = ['porn', 'xvideo', 'xnxx', 'spankbang', 'eporner', 'onlyfans', 'rule34', 'brazzers', 'redtube', 'youporn', 'xhamster', 'tube8', 'chaturbate', 'cam4', 'stripchat', 'nsfw', 'hentai', 'naughtyamerica', 'realitykings', 'x-art', 'kink', 'babe', 'sex', 'milf', 'jav'];
+        const isAdult = adultKeywords.some(kw => lowerUrl.includes(kw));
+        
+        const musicKeywords = ['vevo', 'music', 'spotify', 'soundcloud', 'mtv'];
+        const isMusic = musicKeywords.some(kw => lowerUrl.includes(kw));
+        
+        if (isAdult) {
+            customMsg = "Mamma mia! Jesus is-a watching you! ✝️ Keep it clean-a!";
+            animName = 'marioShock 0.05s infinite alternate';
+            filterStr = 'drop-shadow(2px 3px 0 rgba(0,0,0,0.5)) grayscale(100%) sepia(50%) hue-rotate(300deg)';
+        } else if (isMusic) {
+            customMsg = "Ooh, nice-a song! Mario loves to dance! 🎵 Yipee!";
+            animName = 'marioDance 0.35s infinite alternate';
+        } else {
+            customMsg = "Mamma mia, you have-a weird taste in videos! 🍝 But okay!";
+            animName = 'marioJump 3s ease-in-out infinite';
+        }
+        
+        summonGenie(true, customMsg);
+        
+        const marioEl = document.querySelector('.genie-character');
+        if (marioEl) {
+            marioEl.style.animation = animName;
+            marioEl.style.filter = filterStr;
+        }
+
         currentPreviewUrl = url;
         showPreviewModal(url);
       };
@@ -1978,11 +2142,26 @@
         </div>
         <div class="genie-character"></div>
       </div>
-      <div class="genie-lamp" onclick="summonGenie()" title="Summon Mario!"></div>
+      <div class="genie-lamp" onclick="handlePipeClick()" title="Summon Mario!">
+         <div class="piranha-dialog" id="piranha-dialog" style="display:none;">
+            Click here to get the video downloader! 💦
+         </div>
+         <div class="piranha-container">
+           <div id="piranha-plant" style="display:none;"></div>
+         </div>
+      </div>
     </div>
 
     <script>
       let genieTimer = null;
+
+      function handlePipeClick() {
+          if (document.querySelector('.content').classList.contains('slide-down-into-pipe')) {
+              exitGame(); // Pause and slide up
+          } else {
+              summonGenie(); // Normal Mario pop-up
+          }
+      }
 
       function summonGenie(isCustom = false, customMsg = '') {
         const popup = document.getElementById('genie-popup');
@@ -2006,6 +2185,13 @@
             title.innerHTML = "🍄 It's-a me!";
             defaultTips.forEach(t => t.style.display = 'flex');
             customTip.style.display = 'none';
+            
+            // Reset Mario animation
+            const marioEl = document.querySelector('.genie-character');
+            if (marioEl) {
+                marioEl.style.animation = 'marioJump 3s ease-in-out infinite';
+                marioEl.style.filter = 'drop-shadow(2px 3px 0 rgba(0,0,0,0.5))';
+            }
         }
 
         const progress = document.getElementById('genieProgress');
@@ -2350,6 +2536,9 @@
         let rotation = 0;
 
         function animate() {
+            if (isGamePaused) {
+                return requestAnimationFrame(animate);
+            }
             if (!gameActive) { shell.remove(); return; }
             x += vx;
             vy += 0.8;
@@ -2487,6 +2676,9 @@
         }
 
         function animate() {
+            if (isGamePaused) {
+                return requestAnimationFrame(animate);
+            }
             x += vx;
             vy += gravity;
             y += vy;
@@ -2724,27 +2916,91 @@
          }
       }
       
+      let isGamePaused = false;
+      
       function startGame() {
           document.getElementById('runner-start-screen').style.display = 'none';
-          gameActive = true;
           
-          if (currentGameMode === 'runner') {
-              runnerActive = true;
-              runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
-              runnerAnimFrame = requestAnimationFrame(runnerLoop);
-          } else {
-              bossFireballInterval = setInterval(() => {
-                if (gameActive) shootFireball(false, 1);
-              }, 3000);
+          // Slide content DOWN into the pipe
+          document.querySelector('.content').classList.remove('slide-up-from-pipe');
+          document.querySelector('.content').classList.add('slide-down-into-pipe');
+          const pipe = document.querySelector('.genie-lamp');
+          if (pipe) pipe.classList.add('game-mode');
+          const piranha = document.getElementById('piranha-plant');
+          if (piranha) piranha.style.display = 'block';
+          
+          // Wait for 2s comical animation
+          setTimeout(() => {
+              // Pop up the dialogue
+              const dialog = document.getElementById('piranha-dialog');
+              if (dialog && document.querySelector('.genie-lamp').classList.contains('game-mode')) {
+                  dialog.style.display = 'block';
+              }
+              
+              if (isGamePaused) {
+                  // Resume
+                  gameActive = true;
+                  runnerPaused = false;
+                  isGamePaused = false;
+                  
+                  if (currentGameMode === 'runner' && !runnerSpawnInterval) {
+                      runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
+                      runnerAnimFrame = requestAnimationFrame(runnerLoop);
+                  }
+              } else {
+                  // Fresh start
+                  gameActive = true;
+                  
+                  if (currentGameMode === 'runner') {
+                      runnerActive = true;
+                      runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
+                      runnerAnimFrame = requestAnimationFrame(runnerLoop);
+                  } else {
+                      bossFireballInterval = setInterval(() => {
+                        if (gameActive) shootFireball(false, 1);
+                      }, 3000);
+        
+                      bossShellInterval = setInterval(() => {
+                        if (gameActive) shootShell();
+                      }, 8000);
+        
+                      powerupInterval = setInterval(() => {
+                        if (gameActive) spawnPowerup();
+                      }, 10000);
+                  }
+              }
+          }, 2000);
+      }
 
-              bossShellInterval = setInterval(() => {
-                if (gameActive) shootShell();
-              }, 8000);
-
-              powerupInterval = setInterval(() => {
-                if (gameActive) spawnPowerup();
-              }, 10000);
+      function exitGame() {
+          // This acts as Pause Game
+          isGamePaused = true;
+          gameActive = false;
+          runnerPaused = true;
+          
+          // Clear runner intervals so it can be cleanly restarted
+          if (typeof runnerSpawnInterval !== 'undefined') { clearInterval(runnerSpawnInterval); runnerSpawnInterval = null; }
+          if (typeof runnerAnimFrame !== 'undefined') cancelAnimationFrame(runnerAnimFrame);
+          
+          // Slide content back up
+          document.querySelector('.content').classList.remove('slide-down-into-pipe');
+          document.querySelector('.content').classList.add('slide-up-from-pipe');
+          const pipe = document.querySelector('.genie-lamp');
+          if (pipe) pipe.classList.remove('game-mode');
+          const piranha = document.getElementById('piranha-plant');
+          if (piranha) piranha.style.display = 'none';
+          const dialog = document.getElementById('piranha-dialog');
+          if (dialog) dialog.style.display = 'none';
+          
+          // Change start button to RESUME
+          const startBtn = document.querySelector('#runner-start-screen button');
+          if (startBtn) {
+              startBtn.innerHTML = '<i class="fas fa-play"></i> RESUME GAME';
+              startBtn.classList.remove('btn-green');
+              startBtn.classList.add('btn-primary');
           }
+          
+          document.getElementById('runner-start-screen').style.display = 'block';
       }
 
       function spawnObstacle() {
@@ -2909,7 +3165,7 @@
       }
 
       function startDrag(e) {
-        if (isFlying || window.getComputedStyle(abContainer).display === 'none') return;
+        if (isGamePaused || isFlying || window.getComputedStyle(abContainer).display === 'none') return;
         e.preventDefault();
         isDragging = true;
         const pos = getEventPos(e);
@@ -3009,6 +3265,10 @@
         
         function fly() {
           if (!isFlying) return;
+          if (isGamePaused) {
+              abAnimFrame = requestAnimationFrame(fly);
+              return;
+          }
           
           currentX += birdVelocityX;
           currentY += birdVelocityY;
@@ -3168,6 +3428,10 @@
         // Ensure physics keeps running if things are still falling
         if (entitiesFalling()) {
             abAnimFrame = requestAnimationFrame(function continueFalling() {
+                if (isGamePaused) {
+                    abAnimFrame = requestAnimationFrame(continueFalling);
+                    return;
+                }
                 updateTowerPhysics();
                 if (entitiesFalling()) abAnimFrame = requestAnimationFrame(continueFalling);
             });
