@@ -29,13 +29,117 @@
 
       /* Dark Theme Overrides */
       :root.dark-theme {
-        --ink: #FFFFFF;
+        --ink: #FBD000; /* Vibrant yellow text and borders instead of white/black */
         --white: #111111;
         --paper: #1a1a2e; /* dark night sky */
         --border: 3px solid var(--ink);
         --border-thick: 4px solid var(--ink);
-        --shadow: 4px 4px 0 rgba(255,255,255,0.3);
-        --shadow-sm: 2px 2px 0 rgba(255,255,255,0.3);
+        --shadow: 4px 4px 0 rgba(251,208,0,0.4);
+        --shadow-sm: 2px 2px 0 rgba(251,208,0,0.4);
+      }
+      
+      /* Force input panel, history panel, and modals to always look like light mode */
+      :root.dark-theme .input-panel,
+      :root.dark-theme .queue-panel,
+      :root.dark-theme .modal-content {
+        --ink: #000000;
+        --white: #FFFFFF;
+        --paper: #5C94FC;
+        --yellow: #FBD000;
+        --red: #E52521;
+        --border-thick: 4px solid #000000;
+        --shadow: 4px 4px 0 rgba(0,0,0,0.5);
+      }
+      :root.dark-theme textarea::placeholder {
+        color: #fff;
+      }
+      
+      /* Fix dark text in dark mode for tooltips */
+      :root.dark-theme .genie-tip {
+        color: #F4F6F0 !important;
+      }
+      :root.dark-theme .logo-icon {
+        color: #F4F6F0;
+      }
+      
+      /* Dark Theme Specific Colors */
+      :root.dark-theme .header {
+        background: #1B263B; /* Deep night blue navbar */
+      }
+      :root.dark-theme .header h1,
+      :root.dark-theme .nav-links a,
+      :root.dark-theme .hero-text {
+        color: #F4F6F0; /* Moon white readable text */
+      }
+      :root.dark-theme .nav-links a:hover, 
+      :root.dark-theme .nav-links a.active {
+        color: #1B263B;
+      }
+
+
+      :root.dark-theme body {
+        background-image: 
+            /* Stars only */
+            radial-gradient(circle at 10% 20%, #FFF 2px, transparent 3px),
+            radial-gradient(circle at 25% 60%, #FFF 3px, transparent 4px),
+            radial-gradient(circle at 45% 25%, #FFF 2px, transparent 3px),
+            radial-gradient(circle at 65% 45%, #FFF 3px, transparent 4px),
+            radial-gradient(circle at 75% 80%, #FFF 2px, transparent 3px),
+            radial-gradient(circle at 95% 35%, #FFF 2px, transparent 3px);
+        background-size: 1000px 100vh;
+      }
+
+      /* The Single Orbiting Moon */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100px;
+        height: 100px;
+        background: #FBD000;
+        border-radius: 50%;
+        box-shadow: 0 0 60px rgba(251, 208, 0, 0.8), inset -10px -10px 0 rgba(0,0,0,0.2);
+        z-index: -1;
+        display: none;
+        /* Sweeping arc from bottom right to top left */
+        animation: orbitMoon 45s linear infinite;
+      }
+      :root.dark-theme body::before {
+        display: block;
+      }
+      @keyframes orbitMoon {
+        0%   { transform: translate(110vw, 100vh); }
+        25%  { transform: translate(80vw, 40vh); }
+        50%  { transform: translate(45vw, 15vh); }
+        75%  { transform: translate(10vw, 5vh); }
+        100% { transform: translate(-30vw, -10vh); }
+      }
+
+      /* The Sun in Light Mode */
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background: #FFD700;
+        border-radius: 50%;
+        box-shadow: 0 0 80px rgba(255, 215, 0, 0.9), 0 0 140px rgba(255, 140, 0, 0.8), inset -10px -10px 0 rgba(255,140,0,0.5);
+        z-index: -1;
+        display: block;
+        animation: orbitSun 45s linear infinite;
+      }
+      :root.dark-theme body::after {
+        display: none;
+      }
+      @keyframes orbitSun {
+        0%   { transform: translate(-30vw, 100vh); }
+        25%  { transform: translate(10vw, 40vh); }
+        50%  { transform: translate(45vw, 15vh); }
+        75%  { transform: translate(80vw, 5vh); }
+        100% { transform: translate(110vw, -10vh); }
       }
 
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -165,23 +269,18 @@
 
       /* HERO */
       .hero {
-        background: var(--blue);
-        border-bottom: var(--border-thick);
-        padding: 1.2rem 2rem;
+        background: transparent;
+        border-bottom: none;
+        padding: 0.5rem 2rem;
         display: flex;
         align-items: center;
         gap: 1.5rem;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
+        height: 40px; /* space for health bars */
       }
-
       .hero::after {
-        content: '';
-        position: absolute;
-        left: 0; top: 0;
-        width: 100%; height: 100%;
-        background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.04) 10px, rgba(255,255,255,0.04) 20px);
-        pointer-events: none;
+        display: none;
       }
 
       .speech-bubble {
@@ -813,9 +912,9 @@
       
       .pipe-obstacle {
         position: absolute;
-        bottom: 15px; /* sit on ground */
-        width: 32px;
-        height: 48px;
+        bottom: 0px; /* aligned to ground */
+        width: 40px;
+        height: 50px;
         background: #00AA00;
         border: 3px solid #000;
         border-radius: 4px 4px 0 0;
@@ -833,32 +932,34 @@
 
       .fireblade-obstacle {
         position: absolute;
-        bottom: 15px;
+        bottom: 0px; 
+        width: 24px;
+        height: 24px;
+        background: #8B4513;
+        border: 2px solid #000;
+        border-radius: 2px;
+        box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3);
+      }
+      .fireblade-obstacle::after {
+        content: '';
+        position: absolute;
+        bottom: 10px;
+        left: 4px;
         width: 12px;
-        height: 60px;
+        height: 70px;
         background: repeating-linear-gradient(45deg, #FF4500, #FF4500 5px, #FFD700 5px, #FFD700 10px);
         border: 2px solid #000;
         border-radius: 6px;
         transform-origin: bottom center;
-        animation: spinBlade 1s linear infinite;
+        animation: spinBlade 1.5s linear infinite;
       }
       @keyframes spinBlade {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
       }
 
-      .brick-block {
-        position: absolute;
-        bottom: 75px; /* in the air */
-        width: 24px;
-        height: 24px;
-        background: #8B4513;
-        border: 2px solid #000;
-        box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3);
-        background-image: 
-          linear-gradient(90deg, rgba(0,0,0,0.3) 1px, transparent 1px),
-          linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px);
-        background-size: 12px 8px;
+      .is-paused *, .is-paused .ground-pattern {
+        animation-play-state: paused !important;
       }
 
       #score-board {
@@ -1379,12 +1480,11 @@
         transform: translate(2px, 2px);
         box-shadow: 0px 0px 0 var(--ink);
       }
-      
-      :root.dark-theme {
-        --ink: #fff;
-        --white: #1a1a1a;
-        --paper: #2d2d2d;
-        --yellow: #ffd700;
+      :root.dark-theme textarea {
+        color: #ffffff !important;
+      }
+      :root.dark-theme .panel-title {
+        color: #ffffff !important;
       }
     </style>
   </head>
@@ -1498,7 +1598,14 @@
         <div id="bg-boss" class="fighter"></div>
         <div id="game-over-banner" style="display:none; position:absolute; bottom:100px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: auto;">
             <h2 id="game-over-title" style="color:#E52521; font-family:'Press Start 2P', cursive; font-size: 2rem; text-shadow: 3px 3px 0 #fff; margin-bottom: 15px;">GAME OVER</h2>
+            <h3 id="high-score-display" style="display:none; color:#FBD000; font-family:'Press Start 2P', cursive; font-size: 1rem; text-shadow: 2px 2px 0 #000; margin-bottom: 15px;">HIGH SCORE: 0</h3>
             <button onclick="restartMiniGame()" style="font-family:'Press Start 2P', cursive; padding: 8px 16px; background:#FBD000; border:4px solid #000; cursor:pointer; font-size:1rem;">RESTART</button>
+        </div>
+        <div id="runner-start-screen" style="display:none; position:absolute; bottom:120px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: auto;">
+            <button onclick="startGame()" style="font-family:'Press Start 2P', cursive; padding: 12px 24px; background:#43B047; color:#fff; border:4px solid #000; cursor:pointer; font-size:1.5rem; text-shadow: 2px 2px 0 #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.5);">START GAME</button>
+        </div>
+        <div id="runner-paused-screen" style="display:none; position:absolute; bottom:130px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: none;">
+            <h2 style="color:#FBD000; font-family:'Press Start 2P', cursive; font-size: 2rem; text-shadow: 3px 3px 0 #000;">PAUSED</h2>
         </div>
       </div>
       
@@ -1822,8 +1929,8 @@
       function showInfoModal() {
         document.getElementById('infoModal').classList.add('active');
       }
-      function closeModal() {
-        document.getElementById('infoModal').classList.remove('show');
+      function closeInfoModal() {
+        document.getElementById('infoModal').classList.remove('active');
       }
       
       // --- THEME TOGGLE LOGIC ---
@@ -2038,6 +2145,16 @@
 
       let gameActive = true;
       let marioHealth = 100;
+      
+      // Helper for collision boxes when jumping
+      function getTransformY(el) {
+          const style = window.getComputedStyle(el);
+          if (style.transform === 'none') return 0;
+          try {
+              const matrix = new DOMMatrixReadOnly(style.transform);
+              return matrix.m42 || 0;
+          } catch(e) { return 0; }
+      }
       let bossHealth = 100;
       let bossLives = 3;
       let powerLevel = 1;
@@ -2070,33 +2187,33 @@
         if (bossFireballInterval) clearInterval(bossFireballInterval);
         if (bossShellInterval) clearInterval(bossShellInterval);
         if (powerupInterval) clearInterval(powerupInterval);
-        
-        bossFireballInterval = setInterval(() => {
-          if (gameActive) shootFireball(false, 1);
-        }, 3000);
-
-        bossShellInterval = setInterval(() => {
-          if (gameActive) shootShell();
-        }, 8000);
-
-        powerupInterval = setInterval(() => {
-          if (gameActive) spawnPowerup();
-        }, 10000);
       }
 
       function restartMiniGame() {
-          gameActive = true;
+          if (currentGameMode === 'runner') {
+              currentGameMode = 'boss'; // Force toggle
+              switchGameMode('runner');
+              return;
+          }
+          
           document.getElementById('game-over-banner').style.display = 'none';
           document.getElementById('bg-mario').style.display = 'block';
           document.getElementById('bg-boss').style.display = 'block';
+          const healthBars = document.getElementById('health-bars-container');
+          if (healthBars) healthBars.style.display = 'flex';
+          
           document.querySelectorAll('.fireball-projectile').forEach(el => el.remove());
           document.querySelectorAll('.shell-projectile').forEach(el => el.remove());
           initMiniGame();
+          
+          gameActive = false;
+          runnerActive = false;
+          document.getElementById('runner-start-screen').style.display = 'block';
       }
 
       function updateShieldVis() {
         const mario = document.getElementById('bg-mario');
-        if (hasShield) mario.classList.add('shield-active');
+        if (hasShield && currentGameMode !== 'runner') mario.classList.add('shield-active');
         else mario.classList.remove('shield-active');
       }
 
@@ -2550,7 +2667,7 @@
       }
 
       function doShield() {
-        if (!gameActive) return;
+        if (!gameActive || currentGameMode === 'runner') return;
         hasShield = true;
         updateShieldVis();
       }
@@ -2567,14 +2684,18 @@
       }
 
       document.addEventListener('keydown', (e) => {
-        if (!gameActive) return;
+        if (!gameActive && !runnerPaused) return;
         if (e.code === 'Space') {
           e.preventDefault();
-          doJump();
+          if (!runnerPaused) doJump();
         }
         if (e.code === 'Escape') {
           e.preventDefault();
-          doShield();
+          if (currentGameMode === 'runner') {
+              toggleRunnerPause();
+          } else {
+              doShield();
+          }
         }
       });
 
@@ -2582,7 +2703,11 @@
         if (!gameActive) return;
         if (currentGameMode === 'runner') {
             // In runner mode, click anywhere to jump
-            const isInteractive = e.target.closest('button') || e.target.closest('a') || e.target.closest('textarea') || e.target.closest('.modal-content');
+            const isInteractive = e.target.closest('button') || 
+                                  e.target.closest('a') || 
+                                  e.target.closest('textarea') || 
+                                  e.target.closest('.modal-content') ||
+                                  e.target.closest('.header');
             if (!isInteractive) doJump();
             return;
         }
@@ -2609,11 +2734,36 @@
       // --- ENDLESS RUNNER LOGIC ---
       let currentGameMode = 'boss';
       let runnerActive = false;
+      let runnerPaused = false;
       let runnerScore = 0;
       let runnerSpeed = 5;
+      let lastSpeedupScore = 0;
       let obstacles = [];
       let runnerAnimFrame;
       let runnerSpawnInterval;
+      let currentSpawnRate = 2000;
+      
+      let runnerHighScore = parseInt(localStorage.getItem('vidsnatch-highscore')) || 0;
+
+      function toggleRunnerPause() {
+          if (!runnerActive && !runnerPaused) return;
+          const pauseScreen = document.getElementById('runner-paused-screen');
+          if (runnerPaused) {
+              runnerPaused = false;
+              gameActive = true;
+              document.body.classList.remove('is-paused');
+              runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
+              runnerAnimFrame = requestAnimationFrame(runnerLoop);
+              if (pauseScreen) pauseScreen.style.display = 'none';
+          } else {
+              runnerPaused = true;
+              gameActive = false;
+              document.body.classList.add('is-paused');
+              clearInterval(runnerSpawnInterval);
+              cancelAnimationFrame(runnerAnimFrame);
+              if (pauseScreen) pauseScreen.style.display = 'block';
+          }
+      }
 
       function switchGameMode(mode) {
          if (currentGameMode === mode) return;
@@ -2627,6 +2777,8 @@
          if (mode === 'runner') {
              // Stop boss mode
              gameActive = false;
+             hasShield = false;
+             updateShieldVis();
              clearInterval(bossFireballInterval);
              clearInterval(bossShellInterval);
              clearInterval(powerupInterval);
@@ -2637,18 +2789,22 @@
              scoreboard.style.display = 'block';
              ground.classList.add('running');
              runnerScore = 0;
+             lastSpeedupScore = 0;
              document.getElementById('runner-score').innerText = runnerScore;
              runnerSpeed = 5;
+             currentSpawnRate = 2000;
              obstacles.forEach(obs => obs.el.remove());
              obstacles = [];
              
              document.getElementById('bg-mario').style.display = 'block';
              document.getElementById('game-over-banner').style.display = 'none';
+             document.getElementById('high-score-display').style.display = 'none';
+             document.body.classList.remove('is-paused');
              
-             runnerActive = true;
-             gameActive = true;
-             runnerSpawnInterval = setInterval(spawnObstacle, 2000);
-             runnerAnimFrame = requestAnimationFrame(runnerLoop);
+             runnerPaused = false;
+             runnerActive = false; // Wait for start button
+             gameActive = false;
+             document.getElementById('runner-start-screen').style.display = 'block';
          } else {
              // Stop runner mode
              runnerActive = false;
@@ -2663,29 +2819,63 @@
              // Start boss mode
              boss.style.display = 'block';
              if (healthBars) healthBars.style.display = 'flex';
+             document.body.classList.remove('is-paused');
+             runnerPaused = false;
              restartMiniGame();
          }
       }
+      
+      function startGame() {
+          document.getElementById('runner-start-screen').style.display = 'none';
+          gameActive = true;
+          
+          if (currentGameMode === 'runner') {
+              runnerActive = true;
+              runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
+              runnerAnimFrame = requestAnimationFrame(runnerLoop);
+          } else {
+              bossFireballInterval = setInterval(() => {
+                if (gameActive) shootFireball(false, 1);
+              }, 3000);
+
+              bossShellInterval = setInterval(() => {
+                if (gameActive) shootShell();
+              }, 8000);
+
+              powerupInterval = setInterval(() => {
+                if (gameActive) spawnPowerup();
+              }, 10000);
+          }
+      }
 
       function spawnObstacle() {
-         if (!runnerActive) return;
-         const types = ['pipe', 'fireblade', 'brick'];
+         if (!runnerActive || runnerPaused) return;
+         const types = ['pipe', 'fireblade'];
          const type = types[Math.floor(Math.random() * types.length)];
          const container = document.getElementById('boss-fight-container');
          
          const el = document.createElement('div');
-         el.className = type + (type === 'brick' ? '-block' : '-obstacle');
+         el.className = type + '-obstacle';
          el.style.right = '-50px';
          container.appendChild(el);
          
          obstacles.push({ el, type, x: window.innerWidth + 50, passed: false });
          
-         // Increase difficulty over time
-         if (runnerScore > 0 && runnerScore % 5 === 0) runnerSpeed += 0.5;
+         // Increase difficulty over time (every 10 points)
+         if (runnerScore > 0 && runnerScore % 10 === 0 && runnerScore !== lastSpeedupScore) {
+             lastSpeedupScore = runnerScore;
+             runnerSpeed += 1;
+             
+             if (currentSpawnRate > 800) {
+                 currentSpawnRate -= 200;
+                 clearInterval(runnerSpawnInterval);
+                 runnerSpawnInterval = setInterval(spawnObstacle, currentSpawnRate);
+             }
+         }
       }
 
       function runnerLoop() {
-         if (!runnerActive) return;
+         if (!runnerActive || runnerPaused) return;
          
          const mario = document.getElementById('bg-mario');
          const mTy = getTransformY(mario);
@@ -2702,10 +2892,8 @@
              // Check passed for score
              if (!obs.passed && obs.x < mLeft) {
                  obs.passed = true;
-                 if (obs.type !== 'brick') { // Bricks don't give score just for passing
-                     runnerScore++;
-                     document.getElementById('runner-score').innerText = runnerScore;
-                 }
+                 runnerScore++;
+                 document.getElementById('runner-score').innerText = runnerScore;
              }
              
              // Remove offscreen
@@ -2721,17 +2909,10 @@
              const oTop = obs.el.offsetTop;
              const oBottom = obs.el.offsetTop + obs.el.offsetHeight;
              
-             if (mRight > oLeft + 10 && mLeft < oRight - 10 && mBottom > oTop + 10 && mTop < oBottom - 10) {
-                 if (obs.type === 'brick' && mTy < -20 && mTop >= oBottom - 20) {
-                     // Hit brick from below
-                     obs.el.remove();
-                     obstacles.splice(i, 1);
-                     collectPowerup(); // Random character powerup
-                 } else if (obs.type !== 'brick') {
-                     // Hit pipe or fireblade -> Death
-                     triggerRunnerGameOver();
-                     return; // Stop loop
-                 }
+             if (mRight > oLeft + 5 && mLeft < oRight - 5 && mBottom > oTop + 5 && mTop < oBottom - 5) {
+                 // Hit pipe or fireblade -> Death
+                 triggerRunnerGameOver();
+                 return; // Stop loop
              }
          }
          
@@ -2741,10 +2922,18 @@
       function triggerRunnerGameOver() {
          runnerActive = false;
          gameActive = false;
+         runnerPaused = false;
+         document.body.classList.remove('is-paused');
+         if (document.getElementById('runner-paused-screen')) document.getElementById('runner-paused-screen').style.display = 'none';
          clearInterval(runnerSpawnInterval);
          cancelAnimationFrame(runnerAnimFrame);
          const ground = document.querySelector('.ground-pattern');
          ground.classList.remove('running');
+         
+         if (runnerScore > runnerHighScore) {
+             runnerHighScore = runnerScore;
+             localStorage.setItem('vidsnatch-highscore', runnerHighScore);
+         }
          
          const mario = document.getElementById('bg-mario');
          mario.style.transition = 'transform 0.5s';
@@ -2752,6 +2941,11 @@
          
          document.getElementById('game-over-title').innerText = "GAME OVER";
          document.getElementById('game-over-title').style.color = "#E52521";
+         
+         const hsDisplay = document.getElementById('high-score-display');
+         hsDisplay.innerText = "HIGH SCORE: " + runnerHighScore;
+         hsDisplay.style.display = 'block';
+         
          document.getElementById('game-over-banner').style.display = 'block';
          
          // Auto restart in dark mode as requested
@@ -2764,7 +2958,7 @@
       }
 
       // Start game on load
-      window.addEventListener('load', initMiniGame);
+      window.addEventListener('load', restartMiniGame);
     </script>
 
     <!-- ANGRY BIRDS LOGIC -->
