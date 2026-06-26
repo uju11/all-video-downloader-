@@ -3,6 +3,7 @@ import os
 import requests
 import yt_dlp
 import urllib.parse
+import subprocess
 
 # Cookie file for YouTube authentication
 COOKIE_FILE = os.environ.get('COOKIE_FILE', '/app/cookies.txt')
@@ -24,6 +25,7 @@ def fetch_info():
     
     try:
         ydl_opts = {
+            'format': 'best[protocol^=http][ext=mp4]/best[protocol^=http]/best[ext=mp4]/best',
             'quiet': True,
             'no_warnings': True,
             'socket_timeout': 10,
@@ -64,8 +66,8 @@ def stream():
         
     try:
         ydl_opts = {
-            # Force a pre-merged format (video+audio in one file) since we stream directly
-            'format': 'best[ext=mp4]/best',
+            # Force a pre-merged format and prefer direct HTTP streams (bypasses HLS m3u8 playlists)
+            'format': 'best[protocol^=http][ext=mp4]/best[protocol^=http]/best[ext=mp4]/best',
             'quiet': True,
             'no_warnings': True,
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -79,6 +81,13 @@ def stream():
             info = ydl.extract_info(url, download=False)
             
         download_url = info.get('url')
+        protocol = info.get('protocol', '')
+        
+        print(f"[DEBUG] protocol={protocol} ext={info.get('ext')} format_id={info.get('format_id')} "
+              f"vcodec={info.get('vcodec')} acodec={info.get('acodec')} "
+              f"filesize={info.get('filesize') or info.get('filesize_approx')}", flush=True)
+        print(f"[DEBUG] url={download_url}", flush=True)
+        
         if not download_url:
             # Sometimes YouTube extraction fails to get a direct URL
             abort(400, "Could not extract direct stream URL")
@@ -93,8 +102,65 @@ def stream():
         # Secure filename for headers
         filename_encoded = urllib.parse.quote(filename)
 
-        # Open stream to the video provider
-        req = requests.get(download_url, stream=True, headers={'User-Agent': ydl_opts['user_agent']})
+        # Prepare headers for the request
+        request_headers = {'User-Agent': ydl_opts['user_agent']}
+        if info.get('http_headers'):
+            request_headers.update(info['http_headers'])
+            
+        MANIFEST_PROTOCOLS = ('m3u8', 'm3u8_native', 'http_dash_segments', 'http_dash_segments_generic')
+        is_manifest = (
+            protocol in MANIFEST_PROTOCOLS
+            or '.m3u8' in download_url
+            or '.mpd' in download_url
+        )
+            
+        if is_manifest:
+            # Stream manifest via ffmpeg pipe
+            def generate_ffmpeg():
+                headers_str = "".join([f"{k}: {v}\r\n" for k, v in request_headers.items()])
+                cmd = [
+                    'ffmpeg', '-hide_banner', '-loglevel', 'error',
+                    '-headers', headers_str,
+                    '-i', download_url,
+                    '-c:v', 'copy', '-c:a', 'aac', '-f', 'mp4',
+                    '-movflags', 'frag_keyframe+empty_moov',
+                    'pipe:1'
+                ]
+                # Read stderr for debugging
+                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                try:
+                    while True:
+                        chunk = process.stdout.read(1024 * 1024)
+                        if not chunk:
+                            # It exited early, read stderr
+                            err = process.stderr.read().decode('utf-8', errors='ignore')
+                            print(f"[DEBUG] FFmpeg stderr: {err}", flush=True)
+                            break
+                        yield chunk
+                finally:
+                    if process.stdout:
+                        process.stdout.close()
+                    if process.stderr:
+                        process.stderr.close()
+                    if process.poll() is None:
+                        process.terminate()
+                        
+            # Change filename extension to .mp4
+            safe_title = "".join([c for c in title if c.isalpha() or c.isdigit() or c==' ']).rstrip()
+            filename_encoded = urllib.parse.quote(f"{safe_title}.mp4")
+            
+            headers = {
+                'Content-Disposition': f"attachment; filename*=UTF-8''{filename_encoded}",
+                'Content-Type': 'video/mp4'
+            }
+            return Response(generate_ffmpeg(), headers=headers)
+
+        # Open stream to the video provider for direct streams
+        req = requests.get(download_url, stream=True, headers=request_headers)
+        
+        # If the server returned an error (like 403 Forbidden), abort
+        if req.status_code != 200 and req.status_code != 206:
+            abort(req.status_code, f"Provider returned {req.status_code}: {req.reason}")
         
         def generate():
             # Stream in 1MB chunks to keep RAM usage extremely low
