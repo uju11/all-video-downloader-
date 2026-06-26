@@ -27,6 +27,17 @@
         --radius: 0px;
       }
 
+      /* Dark Theme Overrides */
+      :root.dark-theme {
+        --ink: #FFFFFF;
+        --white: #111111;
+        --paper: #1a1a2e; /* dark night sky */
+        --border: 3px solid var(--ink);
+        --border-thick: 4px solid var(--ink);
+        --shadow: 4px 4px 0 rgba(255,255,255,0.3);
+        --shadow-sm: 2px 2px 0 rgba(255,255,255,0.3);
+      }
+
       * { margin: 0; padding: 0; box-sizing: border-box; }
 
       body {
@@ -423,6 +434,25 @@
         display: block;
       }
 
+      .hero-stars {
+        font-size: 2.2rem;
+        animation: spin 6s linear infinite;
+        display: inline-block;
+      }
+
+      #theme-toggle {
+        background: transparent;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        margin-left: 1rem;
+        transition: transform 0.3s;
+        filter: drop-shadow(2px 2px 0 var(--ink));
+      }
+      #theme-toggle:hover {
+        transform: scale(1.2);
+      }
+
       .tasks-empty p {
         font-family: 'Permanent Marker', cursive;
         font-size: 1.15rem;
@@ -772,6 +802,76 @@
         .url-cell { max-width: 160px; }
       }
 
+      /* Endless Runner Assets */
+      .ground-pattern.running {
+        animation: groundScroll 1s linear infinite;
+      }
+      @keyframes groundScroll {
+        from { background-position: 0 0; }
+        to { background-position: -24px 0; }
+      }
+      
+      .pipe-obstacle {
+        position: absolute;
+        bottom: 15px; /* sit on ground */
+        width: 32px;
+        height: 48px;
+        background: #00AA00;
+        border: 3px solid #000;
+        border-radius: 4px 4px 0 0;
+        box-shadow: inset -5px 0 0 rgba(0,0,0,0.3), inset 5px 0 0 rgba(255,255,255,0.4);
+      }
+      .pipe-obstacle::before {
+        content: '';
+        position: absolute;
+        top: -3px; left: -4px; right: -4px; height: 12px;
+        background: #00AA00;
+        border: 3px solid #000;
+        border-radius: 2px;
+        box-shadow: inset -3px 0 0 rgba(0,0,0,0.3), inset 3px 0 0 rgba(255,255,255,0.4);
+      }
+
+      .fireblade-obstacle {
+        position: absolute;
+        bottom: 15px;
+        width: 12px;
+        height: 60px;
+        background: repeating-linear-gradient(45deg, #FF4500, #FF4500 5px, #FFD700 5px, #FFD700 10px);
+        border: 2px solid #000;
+        border-radius: 6px;
+        transform-origin: bottom center;
+        animation: spinBlade 1s linear infinite;
+      }
+      @keyframes spinBlade {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .brick-block {
+        position: absolute;
+        bottom: 75px; /* in the air */
+        width: 24px;
+        height: 24px;
+        background: #8B4513;
+        border: 2px solid #000;
+        box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3);
+        background-image: 
+          linear-gradient(90deg, rgba(0,0,0,0.3) 1px, transparent 1px),
+          linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px);
+        background-size: 12px 8px;
+      }
+
+      #score-board {
+        position: absolute;
+        top: -30px;
+        right: 10px;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1.2rem;
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        display: none; /* hidden in boss mode */
+      }
+
       /* Mobile landscape rotation - portrait phones only */
       @media screen and (max-width: 600px) and (orientation: portrait) {
 
@@ -876,7 +976,8 @@
         /* Characters - tiny */
         .fighter        { width: 14px; height: 18px; }
         #bg-boss        { width: 16px; height: 16px; }
-        #boss-fight-container { padding: 0 4%; bottom: 100%; height: 48px; }
+        #boss-fight-container { display: none !important; }
+        #ab-container { display: block !important; }
 
         /* Game-over banner: position absolute inside the ROTATED body.
            The banner's parent (#boss-fight-container) is also absolute,
@@ -900,14 +1001,7 @@
 
         /* Virtual gamepad */
         #virtual-gamepad {
-          display: flex;
-          justify-content: space-between;
-          position: absolute;
-          bottom: 2px;
-          left: 5px;
-          right: 5px;
-          z-index: 100;
-          pointer-events: none;
+          display: none !important;
         }
         .gamepad-btn { width: 28px; height: 28px; font-size: 0.75rem; border-width: 2px; }
         .gamepad-left, .gamepad-right { display: flex; gap: 5px; pointer-events: auto; }
@@ -1285,6 +1379,13 @@
         transform: translate(2px, 2px);
         box-shadow: 0px 0px 0 var(--ink);
       }
+      
+      :root.dark-theme {
+        --ink: #fff;
+        --white: #1a1a1a;
+        --paper: #2d2d2d;
+        --yellow: #ffd700;
+      }
     </style>
   </head>
   <body>
@@ -1306,8 +1407,9 @@
         </ul>
       </div>
       <div class="header-right" style="display:flex; align-items:center; z-index:1;">
-        <span class="hero-text" style="font-size: 1rem;">PASTE · CLICK · DONE!</span>
-        <span class="hero-stars" style="margin-left: 0.5rem; font-size:1.2rem;">✨</span>
+        <span class="hero-text" style="font-size: 1.2rem;">PASTE · CLICK · DONE!</span>
+        <span class="hero-stars" style="margin-left: 0.5rem;">✨</span>
+        <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
       </div>
     </header>
 
@@ -1391,11 +1493,46 @@
     <footer class="footer" style="width: 100%; position: relative;">
       <!-- BOSS FIGHT BACKGROUND -->
       <div id="boss-fight-container" style="position: absolute; bottom: 100%; left: 0; width: 100%; padding: 0 5%; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; pointer-events: none;">
+        <div id="score-board">SCORE: <span id="runner-score">0</span></div>
         <div id="bg-mario" class="fighter shield-active"></div>
         <div id="bg-boss" class="fighter"></div>
         <div id="game-over-banner" style="display:none; position:absolute; bottom:100px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: auto;">
             <h2 id="game-over-title" style="color:#E52521; font-family:'Press Start 2P', cursive; font-size: 2rem; text-shadow: 3px 3px 0 #fff; margin-bottom: 15px;">GAME OVER</h2>
             <button onclick="restartMiniGame()" style="font-family:'Press Start 2P', cursive; padding: 8px 16px; background:#FBD000; border:4px solid #000; cursor:pointer; font-size:1rem;">RESTART</button>
+        </div>
+      </div>
+      
+      <!-- ANGRY BIRDS BACKGROUND (Mobile Only) -->
+      <div id="ab-container" style="position: absolute; bottom: 100%; left: 0; width: 100%; height: 80px; padding: 0 5%; display: none; z-index: 1; pointer-events: auto;">
+        <!-- Left Side: Slingshot & Bird -->
+        <div id="ab-slingshot-area" style="position: absolute; bottom: 10px; left: 10%; width: 40px; height: 60px;">
+          <!-- Simple CSS slingshot -->
+          <div style="position: absolute; bottom: 0; left: 15px; width: 10px; height: 30px; background: #8B4513;"></div>
+          <div style="position: absolute; bottom: 30px; left: 5px; width: 30px; height: 10px; background: transparent; border-top: 5px solid #8B4513; border-radius: 50%;"></div>
+          
+          <!-- Bird -->
+          <div id="ab-bird" style="position: absolute; top: 15px; left: 10px; width: 20px; height: 20px; background: #FF0000; border-radius: 50%; border: 2px solid #000; cursor: grab; text-align: center; line-height: 16px; font-size: 12px; z-index: 5;">🔴</div>
+        </div>
+        
+        <!-- Trajectory Canvas -->
+        <canvas id="ab-trajectory" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+
+        <!-- Right Side: Piggy Tower -->
+        <div id="ab-tower-area" style="position: absolute; bottom: 10px; right: 10%; width: 50px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+          <!-- Health Bar for Pig -->
+          <div style="width: 30px; height: 5px; background: #000; border: 1px solid #fff; margin-bottom: 2px;">
+             <div id="ab-pig-health" style="width: 100%; height: 100%; background: #00FF00;"></div>
+          </div>
+          <!-- Pig -->
+          <div id="ab-pig" style="width: 25px; height: 25px; background: #00FF00; border-radius: 50%; border: 2px solid #000; text-align: center; line-height: 21px; font-size: 14px; margin-bottom: 2px;">🐷</div>
+          <!-- Tower Blocks -->
+          <div style="width: 40px; height: 15px; background: #A0522D; border: 2px solid #000;"></div>
+          <div style="width: 40px; height: 15px; background: #A0522D; border: 2px solid #000;"></div>
+        </div>
+
+        <div id="ab-win-banner" style="display:none; position:absolute; top: -30px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: auto;">
+            <h2 style="color:#00FF00; font-family:'Press Start 2P', cursive; font-size: 1rem; text-shadow: 2px 2px 0 #000; margin-bottom: 5px;">PIG POPPED!</h2>
+            <button onclick="resetAngryBirds()" style="font-family:'Press Start 2P', cursive; padding: 4px 8px; background:#FBD000; border:2px solid #000; cursor:pointer; font-size:0.5rem;">RESET</button>
         </div>
       </div>
       
@@ -1685,10 +1822,36 @@
       function showInfoModal() {
         document.getElementById('infoModal').classList.add('active');
       }
-      function closeInfoModal() {
-        document.getElementById('infoModal').classList.remove('active');
+      function closeModal() {
+        document.getElementById('infoModal').classList.remove('show');
       }
+      
+      // --- THEME TOGGLE LOGIC ---
+      function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle('dark-theme');
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.innerText = isDark ? '🌙' : '☀️';
+        localStorage.setItem('vidsnatch-theme', isDark ? 'dark' : 'light');
+        
+        // Only toggle game mode on desktop (max-width > 600px)
+        if (window.innerWidth > 600) {
+           switchGameMode(isDark ? 'runner' : 'boss');
+        }
+      }
+      
+      // Load saved theme
+      window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('vidsnatch-theme') === 'dark') {
+          document.documentElement.classList.add('dark-theme');
+          document.getElementById('theme-toggle').innerText = '🌙';
+          if (window.innerWidth > 600) {
+             setTimeout(() => switchGameMode('runner'), 100);
+          }
+        }
+      });
+      // --------------------------
 
+      /* ── UI Logic ── */
       function showConfirmModal(title, message, callback) {
         confirmTitle.textContent   = title;
         confirmMessage.textContent = message;
@@ -2110,28 +2273,18 @@
         resetPowerupEffects();
         powerLevel++;
         
-        const r = Math.random();
+        const characters = ['https://upload.wikimedia.org/wikipedia/en/7/73/Luigi_NSMBU.png', 'https://upload.wikimedia.org/wikipedia/en/1/16/Princess_Peach_Stock_Art.png'];
+        const names = ['LUIGI!', 'PEACH!'];
+        const r = Math.floor(Math.random() * characters.length);
+        
         const mario = document.getElementById('bg-mario');
-
-        if (r < 0.5) {
-            // Iron Man
-            showFloatingText('IRON MAN!', '#00ffff', mario);
-            mario.style.backgroundImage = `url("${IRON_MAN_SVG}")`;
-            mario.style.transform = 'translateY(-40px)';
-            marioDamageMultiplier = 3;
-            
-            setTimeout(() => { shootLaser(); }, 500);
-        } else {
-            // Fire Flower
-            showFloatingText('FIRE FLOWER!', '#ff5500', mario);
-            mario.style.transform = 'scale(1.5)';
-            mario.style.filter = 'hue-rotate(180deg) drop-shadow(0 0 10px #ff0000)';
-            marioDamageMultiplier = 1.5;
-        }
-
+        showFloatingText(names[r], '#00ffff', mario);
+        mario.style.backgroundImage = `url("${characters[r]}")`;
+        marioDamageMultiplier = 2; // Just a slight buff for changing char
+        
         powerupDurationTimer = setTimeout(() => {
             resetPowerupEffects();
-        }, 5000);
+        }, 8000);
       }
 
       function shootShell() {
@@ -2427,6 +2580,12 @@
 
       document.addEventListener('click', (e) => {
         if (!gameActive) return;
+        if (currentGameMode === 'runner') {
+            // In runner mode, click anywhere to jump
+            const isInteractive = e.target.closest('button') || e.target.closest('a') || e.target.closest('textarea') || e.target.closest('.modal-content');
+            if (!isInteractive) doJump();
+            return;
+        }
         const isInteractive = e.target.closest('button') || 
                               e.target.closest('a') || 
                               e.target.closest('textarea') || 
@@ -2447,9 +2606,405 @@
       if (btnShield) btnShield.onclick = (e) => { e.stopPropagation(); doShield(); };
       if (btnAttack) btnAttack.onclick = (e) => { e.stopPropagation(); doAttack(); };
 
+      // --- ENDLESS RUNNER LOGIC ---
+      let currentGameMode = 'boss';
+      let runnerActive = false;
+      let runnerScore = 0;
+      let runnerSpeed = 5;
+      let obstacles = [];
+      let runnerAnimFrame;
+      let runnerSpawnInterval;
+
+      function switchGameMode(mode) {
+         if (currentGameMode === mode) return;
+         currentGameMode = mode;
+         const ground = document.querySelector('.ground-pattern');
+         const boss = document.getElementById('bg-boss');
+         const healthBars = document.getElementById('health-bars-container');
+         const scoreboard = document.getElementById('score-board');
+         const container = document.getElementById('boss-fight-container');
+
+         if (mode === 'runner') {
+             // Stop boss mode
+             gameActive = false;
+             clearInterval(bossFireballInterval);
+             clearInterval(bossShellInterval);
+             clearInterval(powerupInterval);
+             boss.style.display = 'none';
+             if (healthBars) healthBars.style.display = 'none';
+             
+             // Start runner mode
+             scoreboard.style.display = 'block';
+             ground.classList.add('running');
+             runnerScore = 0;
+             document.getElementById('runner-score').innerText = runnerScore;
+             runnerSpeed = 5;
+             obstacles.forEach(obs => obs.el.remove());
+             obstacles = [];
+             
+             document.getElementById('bg-mario').style.display = 'block';
+             document.getElementById('game-over-banner').style.display = 'none';
+             
+             runnerActive = true;
+             gameActive = true;
+             runnerSpawnInterval = setInterval(spawnObstacle, 2000);
+             runnerAnimFrame = requestAnimationFrame(runnerLoop);
+         } else {
+             // Stop runner mode
+             runnerActive = false;
+             gameActive = false;
+             clearInterval(runnerSpawnInterval);
+             cancelAnimationFrame(runnerAnimFrame);
+             scoreboard.style.display = 'none';
+             ground.classList.remove('running');
+             obstacles.forEach(obs => obs.el.remove());
+             obstacles = [];
+             
+             // Start boss mode
+             boss.style.display = 'block';
+             if (healthBars) healthBars.style.display = 'flex';
+             restartMiniGame();
+         }
+      }
+
+      function spawnObstacle() {
+         if (!runnerActive) return;
+         const types = ['pipe', 'fireblade', 'brick'];
+         const type = types[Math.floor(Math.random() * types.length)];
+         const container = document.getElementById('boss-fight-container');
+         
+         const el = document.createElement('div');
+         el.className = type + (type === 'brick' ? '-block' : '-obstacle');
+         el.style.right = '-50px';
+         container.appendChild(el);
+         
+         obstacles.push({ el, type, x: window.innerWidth + 50, passed: false });
+         
+         // Increase difficulty over time
+         if (runnerScore > 0 && runnerScore % 5 === 0) runnerSpeed += 0.5;
+      }
+
+      function runnerLoop() {
+         if (!runnerActive) return;
+         
+         const mario = document.getElementById('bg-mario');
+         const mTy = getTransformY(mario);
+         const mLeft = mario.offsetLeft;
+         const mRight = mario.offsetLeft + mario.offsetWidth;
+         const mTop = mario.offsetTop + mTy;
+         const mBottom = mario.offsetTop + mario.offsetHeight + mTy;
+         
+         for (let i = obstacles.length - 1; i >= 0; i--) {
+             let obs = obstacles[i];
+             obs.x -= runnerSpeed;
+             obs.el.style.right = (window.innerWidth - obs.x) + 'px';
+             
+             // Check passed for score
+             if (!obs.passed && obs.x < mLeft) {
+                 obs.passed = true;
+                 if (obs.type !== 'brick') { // Bricks don't give score just for passing
+                     runnerScore++;
+                     document.getElementById('runner-score').innerText = runnerScore;
+                 }
+             }
+             
+             // Remove offscreen
+             if (obs.x < -100) {
+                 obs.el.remove();
+                 obstacles.splice(i, 1);
+                 continue;
+             }
+             
+             // Collision
+             const oLeft = obs.x;
+             const oRight = obs.x + obs.el.offsetWidth;
+             const oTop = obs.el.offsetTop;
+             const oBottom = obs.el.offsetTop + obs.el.offsetHeight;
+             
+             if (mRight > oLeft + 10 && mLeft < oRight - 10 && mBottom > oTop + 10 && mTop < oBottom - 10) {
+                 if (obs.type === 'brick' && mTy < -20 && mTop >= oBottom - 20) {
+                     // Hit brick from below
+                     obs.el.remove();
+                     obstacles.splice(i, 1);
+                     collectPowerup(); // Random character powerup
+                 } else if (obs.type !== 'brick') {
+                     // Hit pipe or fireblade -> Death
+                     triggerRunnerGameOver();
+                     return; // Stop loop
+                 }
+             }
+         }
+         
+         runnerAnimFrame = requestAnimationFrame(runnerLoop);
+      }
+
+      function triggerRunnerGameOver() {
+         runnerActive = false;
+         gameActive = false;
+         clearInterval(runnerSpawnInterval);
+         cancelAnimationFrame(runnerAnimFrame);
+         const ground = document.querySelector('.ground-pattern');
+         ground.classList.remove('running');
+         
+         const mario = document.getElementById('bg-mario');
+         mario.style.transition = 'transform 0.5s';
+         mario.style.transform = 'translateY(100px) rotate(180deg)';
+         
+         document.getElementById('game-over-title').innerText = "GAME OVER";
+         document.getElementById('game-over-title').style.color = "#E52521";
+         document.getElementById('game-over-banner').style.display = 'block';
+         
+         // Auto restart in dark mode as requested
+         setTimeout(() => {
+            mario.style.transition = 'transform 0.1s';
+            mario.style.transform = 'translateY(0) rotate(0deg)';
+            switchGameMode('boss'); // Toggle twice to reset clean
+            switchGameMode('runner');
+         }, 1500);
+      }
+
       // Start game on load
       window.addEventListener('load', initMiniGame);
     </script>
 
+    <!-- ANGRY BIRDS LOGIC -->
+    <script>
+      const abBird = document.getElementById('ab-bird');
+      const abContainer = document.getElementById('ab-container');
+      const abTrajectory = document.getElementById('ab-trajectory');
+      const abPigHealth = document.getElementById('ab-pig-health');
+      const abWinBanner = document.getElementById('ab-win-banner');
+      const ctx = abTrajectory.getContext('2d');
+      
+      let isDragging = false;
+      let startX, startY;
+      let birdOriginX = 0, birdOriginY = 0;
+      let birdVelocityX = 0, birdVelocityY = 0;
+      let isFlying = false;
+      let pigHealth = 100;
+      const gravity = 0.5;
+      let abAnimFrame;
+
+      // Ensure canvas size matches container
+      function resizeCanvas() {
+        if (!abTrajectory) return;
+        abTrajectory.width = abContainer.offsetWidth;
+        abTrajectory.height = abContainer.offsetHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('load', resizeCanvas);
+
+      function initAngryBirdsEvents() {
+        if (!abBird) return;
+        
+        abBird.addEventListener('mousedown', startDrag);
+        abBird.addEventListener('touchstart', startDrag, {passive: false});
+        
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, {passive: false});
+        
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+      }
+      initAngryBirdsEvents();
+
+      function getEventPos(e) {
+        if (e.touches && e.touches.length > 0) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+      }
+
+      function startDrag(e) {
+        if (isFlying || window.getComputedStyle(abContainer).display === 'none') return;
+        e.preventDefault();
+        isDragging = true;
+        const pos = getEventPos(e);
+        startX = pos.x;
+        startY = pos.y;
+        
+        // Reset bird position visually for drag
+        abBird.style.transition = 'none';
+        resizeCanvas(); // Ensure canvas is ready
+      }
+
+      function drag(e) {
+        if (!isDragging || window.getComputedStyle(abContainer).display === 'none') return;
+        e.preventDefault();
+        const pos = getEventPos(e);
+        let dx = pos.x - startX;
+        let dy = pos.y - startY;
+
+        // Limit drag distance
+        const maxDrag = 40;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist > maxDrag) {
+          dx = (dx / dist) * maxDrag;
+          dy = (dy / dist) * maxDrag;
+        }
+
+        // Must drag back and down (negative x, positive y) to shoot forward and up
+        // We'll allow any drag but visually cap it.
+        abBird.style.transform = `translate(${dx}px, ${dy}px)`;
+        
+        drawTrajectory(dx, dy);
+      }
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        // Get final transform values
+        const transform = abBird.style.transform;
+        const match = transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
+        if (match) {
+          const dx = parseFloat(match[1]);
+          const dy = parseFloat(match[2]);
+          
+          if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            launchBird(dx, dy);
+          } else {
+            // Snap back
+            abBird.style.transition = 'transform 0.2s';
+            abBird.style.transform = 'translate(0px, 0px)';
+            ctx.clearRect(0, 0, abTrajectory.width, abTrajectory.height);
+          }
+        }
+      }
+
+      function drawTrajectory(dx, dy) {
+        ctx.clearRect(0, 0, abTrajectory.width, abTrajectory.height);
+        
+        // Velocity multiplier
+        const mult = -2.5; 
+        let vx = dx * mult;
+        let vy = dy * mult;
+        
+        // Starting pos in canvas coordinates
+        const rect = abBird.getBoundingClientRect();
+        const containerRect = abContainer.getBoundingClientRect();
+        
+        // Center of bird
+        let cx = rect.left - containerRect.left + rect.width / 2 - dx;
+        let cy = rect.top - containerRect.top + rect.height / 2 - dy;
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        for (let i = 0; i < 20; i++) {
+          const t = i * 1.5;
+          const px = cx + vx * t;
+          const py = cy + vy * t + 0.5 * gravity * t * t;
+          
+          if (px > abTrajectory.width || py > abTrajectory.height) break;
+          
+          ctx.beginPath();
+          ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function launchBird(dx, dy) {
+        ctx.clearRect(0, 0, abTrajectory.width, abTrajectory.height);
+        isFlying = true;
+        
+        // Initialize flight physics
+        const mult = -2.5;
+        birdVelocityX = dx * mult;
+        birdVelocityY = dy * mult;
+        
+        let currentX = dx;
+        let currentY = dy;
+        
+        function fly() {
+          if (!isFlying) return;
+          
+          currentX += birdVelocityX;
+          currentY += birdVelocityY;
+          birdVelocityY += gravity;
+          
+          abBird.style.transform = `translate(${currentX}px, ${currentY}px)`;
+          abBird.style.transform += ` rotate(${currentX * 2}deg)`;
+          
+          // Check collision with pig
+          if (checkPigCollision()) {
+            isFlying = false;
+            handlePigHit();
+            return;
+          }
+          
+          // Check bounds (ground or right edge)
+          const birdRect = abBird.getBoundingClientRect();
+          const containerRect = abContainer.getBoundingClientRect();
+          
+          if (birdRect.top > containerRect.bottom || birdRect.left > containerRect.right) {
+            isFlying = false;
+            resetBirdPosition();
+            return;
+          }
+          
+          abAnimFrame = requestAnimationFrame(fly);
+        }
+        fly();
+      }
+
+      function checkPigCollision() {
+        const pig = document.getElementById('ab-pig');
+        if (!pig) return false;
+        
+        const bRect = abBird.getBoundingClientRect();
+        const pRect = pig.getBoundingClientRect();
+        
+        // Simple AABB collision
+        return !(bRect.right < pRect.left || 
+                 bRect.left > pRect.right || 
+                 bRect.bottom < pRect.top || 
+                 bRect.top > pRect.bottom);
+      }
+
+      function handlePigHit() {
+        pigHealth -= 34; // 3 hits to kill
+        if (pigHealth < 0) pigHealth = 0;
+        abPigHealth.style.width = pigHealth + '%';
+        
+        // Poof animation for bird
+        abBird.style.transition = 'transform 0.2s, opacity 0.2s';
+        abBird.style.transform += ' scale(1.5)';
+        abBird.style.opacity = '0';
+        
+        // Wobble pig
+        const pig = document.getElementById('ab-pig');
+        pig.style.transform = 'rotate(20deg)';
+        setTimeout(() => pig.style.transform = 'rotate(-20deg)', 100);
+        setTimeout(() => pig.style.transform = 'rotate(0deg)', 200);
+        
+        if (pigHealth === 0) {
+          pig.innerText = '💥';
+          setTimeout(() => {
+            pig.style.display = 'none';
+            abWinBanner.style.display = 'block';
+          }, 300);
+        }
+        
+        setTimeout(resetBirdPosition, 500);
+      }
+
+      function resetBirdPosition() {
+        isFlying = false;
+        cancelAnimationFrame(abAnimFrame);
+        abBird.style.transition = 'none';
+        abBird.style.opacity = '1';
+        abBird.style.transform = 'translate(0px, 0px) rotate(0deg)';
+      }
+      
+      window.resetAngryBirds = function() {
+        pigHealth = 100;
+        abPigHealth.style.width = '100%';
+        const pig = document.getElementById('ab-pig');
+        pig.style.display = 'block';
+        pig.innerText = '🐷';
+        pig.style.transform = 'rotate(0deg)';
+        abWinBanner.style.display = 'none';
+        resetBirdPosition();
+      }
+    </script>
   </body>
 </html>
