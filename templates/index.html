@@ -30,6 +30,7 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
 
       body {
+        overflow-x: hidden;
         font-family: 'Comic Neue', cursive;
         background-color: var(--paper);
         background-image: 
@@ -786,9 +787,97 @@
           width: 100vh;
           height: 100vw;
           transform: translate(-50%, -50%) rotate(90deg);
-          overflow-y: auto;
-          overflow-x: hidden;
+          overflow: hidden !important;
         }
+      }
+
+      /* ── COMPACT LAYOUT (NO SCROLLING) ── */
+      @media screen and (orientation: landscape) and (max-height: 500px),
+             screen and (orientation: portrait) and (max-width: 500px) {
+        
+        html, body {
+          overflow: hidden !important;
+        }
+        
+        /* Make sure body doesn't stretch past viewport */
+        body {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        /* Reduce header */
+        .header { padding: 0.3rem 1rem; border-bottom-width: 2px; min-height: unset; }
+        .logo-icon { width: 32px; height: 32px; font-size: 0.9rem; }
+        .header h1 { font-size: 1.1rem; }
+        .nav-links a { font-size: 0.6rem; padding: 0.2rem 0.4rem; }
+        .hero-text { font-size: 0.8rem; }
+        .hero-stars { font-size: 0.8rem; }
+
+        /* Reduce hero & health bars */
+        .hero { padding: 0.3rem 1rem; gap: 0.3rem; border-bottom-width: 2px; }
+        .health-bar-wrapper { width: 90px; height: 10px; border-width: 2px; }
+        .hero-name { font-size: 0.5rem; }
+        #boss-hearts { font-size: 0.5rem; }
+
+        /* Reduce content (middle area) */
+        .content { padding: 0.3rem 1rem; flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 800px; margin: 0 auto; }
+        .input-panel, .queue-panel { padding: 0.6rem; margin-bottom: 0; border-width: 2px; width: 100%; box-shadow: 2px 2px 0 var(--ink); }
+        .input-panel::before, .queue-panel::before { top: -10px; font-size: 0.75rem; padding: 0.1rem 0.3rem; }
+        .panel-title { font-size: 1rem; margin-bottom: 0.3rem; padding-bottom: 0.3rem; border-bottom-width: 2px; }
+        .panel-title i { font-size: 0.9rem; }
+        textarea { min-height: 45px; padding: 0.3rem; font-size: 0.75rem; border-width: 2px; }
+        .button-group { margin-top: 0.3rem; gap: 0.5rem; }
+        .btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; border-width: 2px; box-shadow: 2px 2px 0 var(--ink); }
+
+        /* Adjust queue panel specifically */
+        .queue-header { margin-bottom: 0.3rem; padding-bottom: 0.3rem; }
+        .queue-title { font-size: 1rem; }
+        .table-wrap { max-height: 100px; overflow-y: auto; }
+        th, td { padding: 0.4rem 0.5rem; font-size: 0.75rem; }
+        .tasks-empty { padding: 1rem; }
+        .empty-doodle { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* Reduce footer & characters */
+        .footer-content { padding: 0.3rem; }
+        .footer-brand { font-size: 0.8rem; margin-bottom: 0.2rem; }
+        .footer p { font-size: 0.45rem; line-height: 1.1; }
+        .footer-links { margin-top: 0.3rem; gap: 0.8rem; }
+        .footer-links a { font-size: 0.45rem; }
+        
+        .ground-pattern { height: 12px; background-size: 12px 12px; border-width: 2px; }
+        
+        /* Characters */
+        .fighter { width: 28px; height: 38px; }
+        #boss-fight-container { padding: 0 5%; bottom: 100%; height: 120px; }
+
+        /* Virtual gamepad visible */
+        #virtual-gamepad {
+          display: flex;
+          justify-content: space-between;
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          z-index: 100;
+          pointer-events: none;
+        }
+        .gamepad-left, .gamepad-right {
+          display: flex;
+          gap: 15px;
+          pointer-events: auto;
+        }
+
+        /* Tags and badges */
+        .zap-tag { font-size: 0.7rem; padding: 0.1rem 0.4rem; top: -10px; right: 10px; }
+        
+        /* Modals */
+        .modal-content { max-height: 90vh; }
+        .modal-header { padding: 0.6rem 1rem; }
+        .modal-header h2 { font-size: 1.2rem; }
+        .modal-body { padding: 0.8rem 1rem; max-height: 60vh; }
+        .modal-footer { padding: 0.6rem 1rem; }
+        .video-thumbnail { height: 100px; }
       }
       /* iOS TOAST */
       #iosToast {
@@ -1115,6 +1204,28 @@
         to { transform: scaleX(-1) translateY(-15px); }
       }
 
+      /* Virtual Gamepad Styles */
+      #virtual-gamepad {
+        display: none;
+      }
+      .gamepad-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 3px solid var(--ink);
+        background: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 2px 0 var(--ink);
+        cursor: pointer;
+        padding: 0;
+      }
+      .gamepad-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0 var(--ink);
+      }
     </style>
   </head>
   <body>
@@ -1218,18 +1329,29 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="footer">
+    <footer class="footer" style="width: 100%; position: relative;">
       <!-- BOSS FIGHT BACKGROUND -->
-      <div id="boss-fight-container">
+      <div id="boss-fight-container" style="position: absolute; bottom: 100%; left: 0; width: 100%; padding: 0 5%; display: flex; justify-content: space-between; align-items: flex-end; z-index: 0; pointer-events: none;">
         <div id="bg-mario" class="fighter shield-active"></div>
         <div id="bg-boss" class="fighter"></div>
-        <div id="game-over-banner" style="display:none; position:absolute; bottom:120px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10;">
-            <h2 id="game-over-title" style="color:#E52521; font-family:'Press Start 2P', cursive; font-size: 2.5rem; text-shadow: 3px 3px 0 #fff; margin-bottom: 15px;">GAME OVER</h2>
-            <button onclick="restartMiniGame()" style="font-family:'Press Start 2P', cursive; padding: 12px 24px; background:#FBD000; border:4px solid #000; cursor:pointer; font-size:1.2rem;">RESTART</button>
+        <div id="game-over-banner" style="display:none; position:absolute; bottom:50%; left:50%; transform:translate(-50%, 50%); text-align:center; z-index: 10; pointer-events: auto;">
+            <h2 id="game-over-title" style="color:#E52521; font-family:'Press Start 2P', cursive; font-size: 2rem; text-shadow: 3px 3px 0 #fff; margin-bottom: 15px;">GAME OVER</h2>
+            <button onclick="restartMiniGame()" style="font-family:'Press Start 2P', cursive; padding: 8px 16px; background:#FBD000; border:4px solid #000; cursor:pointer; font-size:1rem;">RESTART</button>
         </div>
       </div>
       
-      <div class="ground-pattern"></div>
+      <div class="ground-pattern" style="width: 200%; margin-left: -50%; position: relative;"></div>
+      
+      <!-- VIRTUAL GAMEPAD -->
+      <div id="virtual-gamepad">
+        <div class="gamepad-left">
+          <button id="btn-shield" class="gamepad-btn">🛡️</button>
+          <button id="btn-jump" class="gamepad-btn">⬆️</button>
+        </div>
+        <div class="gamepad-right">
+          <button id="btn-attack" class="gamepad-btn">🔥</button>
+        </div>
+      </div>
       <div class="footer-content">
         <div class="footer-brand">🍄 VidSnatch! 🍄</div>
         <p>© 2024 VidSnatch — Super Video Downloader</p>
@@ -1690,7 +1812,6 @@
 
       /* ── MINI GAME LOGIC ── */
       const MARIO_SVG = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Crect x='3' y='0' width='5' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='1' width='9' height='1' fill='%23ff0000'/%3E%3Crect x='2' y='2' width='3' height='1' fill='%238b4513'/%3E%3Crect x='5' y='2' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%238b4513'/%3E%3Crect x='4' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='8' y='3' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%238b4513'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='4' width='2' height='1' fill='%238b4513'/%3E%3Crect x='5' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23000000'/%3E%3Crect x='9' y='4' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='1' y='5' width='2' height='1' fill='%238b4513'/%3E%3Crect x='3' y='5' width='4' height='1' fill='%23ffcc99'/%3E%3Crect x='7' y='5' width='4' height='1' fill='%23000000'/%3E%3Crect x='3' y='6' width='6' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='7' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='7' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='1' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='5' y='8' width='2' height='1' fill='%23ff0000'/%3E%3Crect x='7' y='8' width='1' height='1' fill='%230000ff'/%3E%3Crect x='8' y='8' width='3' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='4' y='9' width='4' height='1' fill='%230000ff'/%3E%3Crect x='8' y='9' width='4' height='1' fill='%23ff0000'/%3E%3Crect x='0' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='5' y='10' width='2' height='1' fill='%230000ff'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%23ffff00'/%3E%3Crect x='8' y='10' width='1' height='1' fill='%230000ff'/%3E%3Crect x='9' y='10' width='1' height='1' fill='%23ff0000'/%3E%3Crect x='10' y='10' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='3' y='11' width='6' height='1' fill='%230000ff'/%3E%3Crect x='9' y='11' width='3' height='1' fill='%23ffcc99'/%3E%3Crect x='0' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='12' width='8' height='1' fill='%230000ff'/%3E%3Crect x='10' y='12' width='2' height='1' fill='%23ffcc99'/%3E%3Crect x='2' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='7' y='13' width='3' height='1' fill='%230000ff'/%3E%3Crect x='1' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='8' y='14' width='3' height='1' fill='%238b4513'/%3E%3Crect x='0' y='15' width='4' height='1' fill='%238b4513'/%3E%3Crect x='8' y='15' width='4' height='1' fill='%238b4513'/%3E%3C/svg%3E";
-      const PEACH_SVG = MARIO_SVG.replace(/%23ff0000/g, '%23ff99cc').replace(/%230000ff/g, '%23ffd700'); // Red -> Pink, Blue -> Gold
 
       let gameActive = true;
       let marioHealth = 100;
@@ -1717,12 +1838,12 @@
         if (powerupInterval) clearInterval(powerupInterval);
         
         bossAttackInterval = setInterval(() => {
-          if (gameActive) shootFireball(false, 1); // Boss attacks automatically
+          if (gameActive) shootFireball(false, 1);
         }, 3000);
 
         powerupInterval = setInterval(() => {
           if (gameActive) spawnPowerup();
-        }, 10000); // appears every 10 seconds (stays for 3s)
+        }, 10000);
       }
 
       function restartMiniGame() {
@@ -1730,10 +1851,7 @@
           document.getElementById('game-over-banner').style.display = 'none';
           document.getElementById('bg-mario').style.display = 'block';
           document.getElementById('bg-boss').style.display = 'block';
-          
-          // Clear all existing fireballs
           document.querySelectorAll('.fireball-projectile').forEach(el => el.remove());
-          
           initMiniGame();
       }
 
@@ -1773,17 +1891,11 @@
             gameActive = false;
             clearInterval(bossAttackInterval);
             clearInterval(powerupInterval);
-            
-            // Hide heroes
             document.getElementById('bg-mario').style.display = 'none';
             document.getElementById('bg-boss').style.display = 'none';
-            
-            // Show Game Over inside container
             document.getElementById('game-over-title').innerText = "GAME OVER";
             document.getElementById('game-over-title').style.color = "#E52521";
             document.getElementById('game-over-banner').style.display = 'block';
-            
-            // Clear any powerup
             document.getElementById('powerup-block').style.display = 'none';
             if (powerupTimeout) clearTimeout(powerupTimeout);
         }
@@ -1795,23 +1907,19 @@
         if (bossHealth <= 0) {
            bossLives--;
            if (bossLives <= 0) {
-               // You Won!
                bossHealth = 0;
                gameActive = false;
                clearInterval(bossAttackInterval);
                clearInterval(powerupInterval);
-               
                document.getElementById('bg-mario').style.display = 'none';
                document.getElementById('bg-boss').style.display = 'none';
-               
                document.getElementById('game-over-title').innerText = "YOU WON!";
                document.getElementById('game-over-title').style.color = "#00cc00";
                document.getElementById('game-over-banner').style.display = 'block';
-               
                document.getElementById('powerup-block').style.display = 'none';
                if (powerupTimeout) clearTimeout(powerupTimeout);
            } else {
-               bossHealth = 100; // Boss respawns/recovers
+               bossHealth = 100;
            }
         }
         updateBossHealthBar();
@@ -1821,7 +1929,6 @@
 
       function spawnPowerup() {
         const block = document.getElementById('powerup-block');
-        // Random position in the top half of the screen
         const x = Math.floor(Math.random() * (window.innerWidth - 100)) + 50;
         const y = Math.floor(Math.random() * (window.innerHeight / 2 - 100)) + 50;
         block.style.left = x + 'px';
@@ -1840,7 +1947,6 @@
         if (powerupTimeout) clearTimeout(powerupTimeout);
         
         powerLevel++;
-        // Visual cue for leveling up
         const mario = document.getElementById('bg-mario');
         mario.style.filter = 'brightness(2) drop-shadow(0 0 10px #ffff00)';
         setTimeout(() => { mario.style.filter = ''; }, 500);
@@ -1850,35 +1956,44 @@
         if (!gameActive) return;
         const mario = document.getElementById('bg-mario');
         const boss = document.getElementById('bg-boss');
-        if (!mario || !boss) return;
+        const container = document.getElementById('boss-fight-container');
+        if (!mario || !boss || !container) return;
+        
+        const getTransformY = (el) => {
+            const transform = window.getComputedStyle(el).transform;
+            if (transform && transform !== 'none') {
+                const parts = transform.split(',');
+                if (parts.length === 6) return parseFloat(parts[5]);
+            }
+            return 0;
+        };
         
         let startElem = isMarioShooting ? mario : boss;
-        let rect = startElem.getBoundingClientRect();
         
-        let x = isMarioShooting ? rect.right - 20 : rect.left;
-        let y = rect.top + rect.height / 2 - 20;
+        // Local coordinates relative to container
+        let x = startElem.offsetLeft + (isMarioShooting ? startElem.offsetWidth : 0);
+        let y = startElem.offsetTop + getTransformY(startElem) + startElem.offsetHeight / 2 - 10;
         
-        let vx = isMarioShooting ? 16 : -16; // speed
-        let vy = -4; // initial jump speed
+        let vx = isMarioShooting ? 16 : -16;
+        let vy = -4;
         const gravity = 0.8;
-        const groundY = document.getElementById('boss-fight-container').getBoundingClientRect().bottom;
+        const groundY = container.offsetHeight; // The bottom of the container
         
         const fireball = document.createElement('div');
         fireball.className = 'fireball-projectile';
         fireball.textContent = isMarioShooting ? '🔥' : '☄️';
-        fireball.style.fontSize = isMarioShooting ? (2 + power * 0.4) + 'rem' : '2rem';
-        fireball.style.position = 'fixed';
+        fireball.style.fontSize = isMarioShooting ? (1 + power * 0.2) + 'rem' : '1.5rem';
+        fireball.style.position = 'absolute';
         fireball.style.left = x + 'px';
         fireball.style.top = y + 'px';
-        fireball.style.zIndex = '0';
+        fireball.style.zIndex = '10';
         fireball.style.pointerEvents = 'none';
         fireball.style.filter = 'drop-shadow(2px 2px 0 rgba(0,0,0,0.4))';
         if (!isMarioShooting) {
           fireball.style.transform = 'scaleX(-1)';
         }
-        document.body.appendChild(fireball);
+        container.appendChild(fireball);
         
-        // Jump effect for shooter (don't interrupt if already jumping)
         if (!(isMarioShooting && isJumping)) {
             startElem.style.animation = 'none';
             startElem.style.transform = isMarioShooting ? 'translateY(-30px)' : 'scaleX(-1) translateY(-30px)';
@@ -1893,36 +2008,37 @@
             vy += gravity;
             y += vy;
             
-            // Bounce on ground
+            // Bounce on ground (local space)
             if (y > groundY - 20) {
                 y = groundY - 20;
-                vy = -12; // bounce strength
+                vy = -12;
             }
             
             fireball.style.left = x + 'px';
             fireball.style.top = y + 'px';
             
-            // Check collision
             const enemy = isMarioShooting ? boss : mario;
-            const eRect = enemy.getBoundingClientRect();
+            const enemyTy = getTransformY(enemy);
+            const eLeft = enemy.offsetLeft;
+            const eRight = enemy.offsetLeft + enemy.offsetWidth;
+            const eTop = enemy.offsetTop + enemyTy;
+            const eBottom = enemy.offsetTop + enemy.offsetHeight + enemyTy;
             
-            if (x + 20 > eRect.left && x < eRect.right && y + 20 > eRect.top && y < eRect.bottom) {
+            // Check collision locally
+            if (x + 20 > eLeft && x < eRight && y + 20 > eTop && y < eBottom) {
                 fireball.remove();
-                
                 let applyHitEffect = true;
 
-                if (!isMarioShooting) { // Boss hit Mario
+                if (!isMarioShooting) {
                    if (hasShield) {
-                       // Blocked!
                        applyHitEffect = false;
                    } else {
                        takeDamage();
                    }
-                } else { // Mario hit Boss
+                } else {
                    takeBossDamage();
                 }
 
-                // Hit effect
                 if (applyHitEffect) {
                     enemy.style.animation = 'none';
                     enemy.style.filter = 'brightness(2) drop-shadow(4px 4px 0 rgba(255,0,0,0.8))';
@@ -1936,41 +2052,59 @@
                 return;
             }
             
-            if (x < -100 || x > window.innerWidth + 100) {
+            if (x < -100 || x > container.offsetWidth + 100) {
                 fireball.remove();
                 return;
             }
-            
             requestAnimationFrame(animate);
         }
         requestAnimationFrame(animate);
+      }
+
+      function doJump() {
+        if (!gameActive || isJumping) return;
+        isJumping = true;
+        const mario = document.getElementById('bg-mario');
+        mario.style.animation = 'none';
+        mario.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1)';
+        mario.style.transform = 'translateY(-100px)';
+        setTimeout(() => {
+          mario.style.transition = 'transform 0.3s cubic-bezier(0.6, 0, 0.8, 0.2)';
+          mario.style.transform = 'translateY(0)';
+          setTimeout(() => {
+            mario.style.transition = '';
+            mario.style.animation = '';
+            isJumping = false;
+          }, 300);
+        }, 400);
+      }
+
+      function doShield() {
+        if (!gameActive) return;
+        hasShield = true;
+        updateShieldVis();
+      }
+
+      function doAttack() {
+        if (!gameActive) return;
+        hasShield = false;
+        updateShieldVis();
+        for (let i = 0; i < powerLevel; i++) {
+            setTimeout(() => {
+                shootFireball(true, powerLevel);
+            }, i * 200);
+        }
       }
 
       document.addEventListener('keydown', (e) => {
         if (!gameActive) return;
         if (e.code === 'Space') {
           e.preventDefault();
-          if (!isJumping) {
-             isJumping = true;
-             
-             const mario = document.getElementById('bg-mario');
-             mario.style.animation = 'none';
-             mario.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1)';
-             mario.style.transform = 'translateY(-150px)';
-             setTimeout(() => {
-               mario.style.transition = 'transform 0.3s cubic-bezier(0.6, 0, 0.8, 0.2)';
-               mario.style.transform = 'translateY(0)';
-               setTimeout(() => {
-                 mario.style.transition = '';
-                 mario.style.animation = ''; // restores bounce
-                 isJumping = false;
-               }, 300);
-             }, 400);
-          }
+          doJump();
         }
         if (e.code === 'Escape') {
-             hasShield = true; // Defense shield reappears
-             updateShieldVis();
+          e.preventDefault();
+          doShield();
         }
       });
 
@@ -1985,18 +2119,16 @@
                               e.target.closest('.header') ||
                               e.target.closest('.footer');
         if (isInteractive) return;
-        
-        // Mario attacks on any non-interactive click
-        hasShield = false; // Shield disappears when attacking
-        updateShieldVis();
-        
-        // If power level > 1, shoot multiple fireballs!
-        for (let i = 0; i < powerLevel; i++) {
-            setTimeout(() => {
-                shootFireball(true, powerLevel);
-            }, i * 200);
-        }
+        doAttack();
       });
+
+      // Virtual Gamepad
+      const btnJump = document.getElementById('btn-jump');
+      const btnShield = document.getElementById('btn-shield');
+      const btnAttack = document.getElementById('btn-attack');
+      if (btnJump) btnJump.onclick = (e) => { e.stopPropagation(); doJump(); };
+      if (btnShield) btnShield.onclick = (e) => { e.stopPropagation(); doShield(); };
+      if (btnAttack) btnAttack.onclick = (e) => { e.stopPropagation(); doAttack(); };
 
       // Start game on load
       window.addEventListener('load', initMiniGame);
