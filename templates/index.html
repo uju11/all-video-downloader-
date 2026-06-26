@@ -999,10 +999,9 @@
         .footer-brand { font-size: 0.9rem; }
         .footer-links { flex-direction: column; gap: 0.8rem; align-items: center; }
 
-        /* Hide ALL game elements on mobile for now */
+        /* Hide most boss game elements on mobile, but allow ab-container */
         #boss-fight-container, 
         #boss-fight-ui, 
-        #ab-container, 
         #health-bars-container,
         #virtual-gamepad,
         #powerup-block { 
@@ -1512,23 +1511,29 @@
           <div style="position: absolute; bottom: 30px; left: 5px; width: 30px; height: 10px; background: transparent; border-top: 5px solid #8B4513; border-radius: 50%;"></div>
           
           <!-- Bird -->
-          <div id="ab-bird" style="position: absolute; top: 15px; left: 10px; width: 20px; height: 20px; background: #FF0000; border-radius: 50%; border: 2px solid #000; cursor: grab; text-align: center; line-height: 16px; font-size: 12px; z-index: 5;">🔴</div>
+          <div id="ab-bird" style="position: absolute; top: 10px; left: 10px; width: 28px; height: 28px; background: transparent; cursor: grab; text-align: center; line-height: 28px; font-size: 24px; z-index: 5; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">🐦</div>
         </div>
         
         <!-- Trajectory Canvas -->
         <canvas id="ab-trajectory" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
 
         <!-- Right Side: Piggy Tower -->
-        <div id="ab-tower-area" style="position: absolute; bottom: 10px; right: 10%; width: 50px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+        <div id="ab-tower-area" style="position: absolute; bottom: 10px; right: 10%; width: 80px; height: 80px;">
           <!-- Health Bar for Pig -->
-          <div style="width: 30px; height: 5px; background: #000; border: 1px solid #fff; margin-bottom: 2px;">
+          <div id="ab-pig-health-container" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 30px; height: 5px; background: #000; border: 1px solid #fff; z-index: 10;">
              <div id="ab-pig-health" style="width: 100%; height: 100%; background: #00FF00;"></div>
           </div>
-          <!-- Pig -->
-          <div id="ab-pig" style="width: 25px; height: 25px; background: #00FF00; border-radius: 50%; border: 2px solid #000; text-align: center; line-height: 21px; font-size: 14px; margin-bottom: 2px;">🐷</div>
-          <!-- Tower Blocks -->
-          <div style="width: 40px; height: 15px; background: #A0522D; border: 2px solid #000;"></div>
-          <div style="width: 40px; height: 15px; background: #A0522D; border: 2px solid #000;"></div>
+          
+          <!-- Pig (y: 15) -->
+          <div id="ab-pig" class="ab-entity" style="position: absolute; bottom: 45px; left: 27px; width: 25px; height: 25px; background: #00FF00; border-radius: 50%; border: 2px solid #000; text-align: center; line-height: 21px; font-size: 14px; z-index: 5;">🐷</div>
+          
+          <!-- Wooden Blocks -->
+          <!-- Roof (y: 30) -->
+          <div id="wood-1" class="ab-entity ab-wood" style="position: absolute; bottom: 30px; left: 15px; width: 50px; height: 15px; background: #A0522D; border: 2px solid #000; z-index: 4;"></div>
+          <!-- Left Pillar (y: 0) -->
+          <div id="wood-2" class="ab-entity ab-wood" style="position: absolute; bottom: 0; left: 20px; width: 15px; height: 30px; background: #8B4513; border: 2px solid #000; z-index: 3;"></div>
+          <!-- Right Pillar (y: 0) -->
+          <div id="wood-3" class="ab-entity ab-wood" style="position: absolute; bottom: 0; left: 45px; width: 15px; height: 30px; background: #8B4513; border: 2px solid #000; z-index: 3;"></div>
         </div>
 
         <div id="ab-win-banner" style="display:none; position:absolute; top: -30px; left:50%; transform:translate(-50%, 0); text-align:center; z-index: 10; pointer-events: auto;">
@@ -2870,7 +2875,7 @@
       let birdVelocityX = 0, birdVelocityY = 0;
       let isFlying = false;
       let pigHealth = 100;
-      const gravity = 0.5;
+      const gravity = 0.05; // Reduced for dramatic slow-mo
       let abAnimFrame;
 
       // Ensure canvas size matches container
@@ -2923,8 +2928,8 @@
         let dx = pos.x - startX;
         let dy = pos.y - startY;
 
-        // Limit drag distance
-        const maxDrag = 40;
+        // Limit drag distance (Increased for more pulling area)
+        const maxDrag = 100;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist > maxDrag) {
           dx = (dx / dist) * maxDrag;
@@ -2963,8 +2968,8 @@
       function drawTrajectory(dx, dy) {
         ctx.clearRect(0, 0, abTrajectory.width, abTrajectory.height);
         
-        // Velocity multiplier
-        const mult = -2.5; 
+        // Velocity multiplier - small for dramatic slow mo
+        const mult = -0.4; 
         let vx = dx * mult;
         let vy = dy * mult;
         
@@ -2980,7 +2985,7 @@
         for (let i = 0; i < 20; i++) {
           const t = i * 1.5;
           const px = cx + vx * t;
-          const py = cy + vy * t + 0.5 * gravity * t * t;
+          const py = cy + vy * t + 0.5 * 0.05 * t * t;
           
           if (px > abTrajectory.width || py > abTrajectory.height) break;
           
@@ -2995,7 +3000,7 @@
         isFlying = true;
         
         // Initialize flight physics
-        const mult = -2.5;
+        const mult = -0.4;
         birdVelocityX = dx * mult;
         birdVelocityY = dy * mult;
         
@@ -3012,51 +3017,131 @@
           abBird.style.transform = `translate(${currentX}px, ${currentY}px)`;
           abBird.style.transform += ` rotate(${currentX * 2}deg)`;
           
-          // Check collision with pig
-          if (checkPigCollision()) {
-            isFlying = false;
-            handlePigHit();
-            return;
+          // Check collision with all entities (pig + wood)
+          const birdRect = abBird.getBoundingClientRect();
+          const entities = document.querySelectorAll('.ab-entity');
+          let hitSomething = false;
+          
+          entities.forEach(entity => {
+              if (entity.style.display === 'none') return;
+              const eRect = entity.getBoundingClientRect();
+              
+              if (!(birdRect.right < eRect.left || 
+                    birdRect.left > eRect.right || 
+                    birdRect.bottom < eRect.top || 
+                    birdRect.top > eRect.bottom)) {
+                  
+                  // Hit!
+                  hitSomething = true;
+                  if (entity.classList.contains('ab-wood')) {
+                      entity.style.display = 'none'; // Wood breaks instantly
+                  } else if (entity.id === 'ab-pig') {
+                      handlePigDamage(34);
+                  }
+              }
+          });
+          
+          if (hitSomething) {
+              isFlying = false;
+              // Poof animation for bird
+              abBird.style.transition = 'transform 0.2s, opacity 0.2s';
+              abBird.style.transform += ' scale(1.5)';
+              abBird.style.opacity = '0';
+              setTimeout(resetBirdPosition, 1000);
           }
+          
+          // Physics step for tower blocks and pig
+          updateTowerPhysics();
           
           // Check bounds (ground or right edge)
-          const birdRect = abBird.getBoundingClientRect();
           const containerRect = abContainer.getBoundingClientRect();
-          
           if (birdRect.top > containerRect.bottom || birdRect.left > containerRect.right) {
             isFlying = false;
-            resetBirdPosition();
-            return;
+            setTimeout(resetBirdPosition, 1000); // Wait a sec before reset
           }
           
-          abAnimFrame = requestAnimationFrame(fly);
+          if (isFlying || entitiesFalling()) {
+              abAnimFrame = requestAnimationFrame(fly);
+          }
         }
         fly();
       }
 
-      function checkPigCollision() {
-        const pig = document.getElementById('ab-pig');
-        if (!pig) return false;
-        
-        const bRect = abBird.getBoundingClientRect();
-        const pRect = pig.getBoundingClientRect();
-        
-        // Simple AABB collision
-        return !(bRect.right < pRect.left || 
-                 bRect.left > pRect.right || 
-                 bRect.bottom < pRect.top || 
-                 bRect.top > pRect.bottom);
+      function updateTowerPhysics() {
+          // Simple gravity for entities
+          const entities = document.querySelectorAll('.ab-entity');
+          let anyFell = false;
+          
+          entities.forEach(entity => {
+              if (entity.style.display === 'none') return;
+              
+              // Custom property to track falling velocity
+              if (!entity.dataset.vy) entity.dataset.vy = 0;
+              
+              // Is there something directly below this entity?
+              let supported = false;
+              const rect = entity.getBoundingClientRect();
+              const containerRect = abContainer.getBoundingClientRect();
+              
+              // Ground support check
+              if (rect.bottom >= containerRect.bottom - 2) {
+                  supported = true;
+                  
+                  // If it's the pig and it hit the ground hard, take damage!
+                  if (entity.id === 'ab-pig' && parseFloat(entity.dataset.vy) > 0) {
+                      handlePigDamage(34);
+                      entity.dataset.vy = 0;
+                  }
+                  
+                  // Reset position slightly if it passed ground
+                  if (rect.bottom > containerRect.bottom) {
+                     let bottom = parseFloat(entity.style.bottom || 0);
+                     entity.style.bottom = '0px';
+                  }
+              } else {
+                  // Check if resting on another block
+                  entities.forEach(other => {
+                      if (other === entity || other.style.display === 'none') return;
+                      const oRect = other.getBoundingClientRect();
+                      
+                      // Check if 'entity' is directly above 'other'
+                      if (rect.bottom >= oRect.top - 2 && rect.bottom <= oRect.top + 5 &&
+                          rect.right > oRect.left && rect.left < oRect.right) {
+                          supported = true;
+                      }
+                  });
+              }
+              
+              if (!supported) {
+                  // Fall
+                  let vy = parseFloat(entity.dataset.vy);
+                  vy += 0.2; // Gravity for blocks
+                  entity.dataset.vy = vy;
+                  
+                  let bottom = parseFloat(entity.style.bottom || 0);
+                  bottom -= vy;
+                  if (bottom < 0) bottom = 0;
+                  entity.style.bottom = bottom + 'px';
+              } else {
+                  entity.dataset.vy = 0;
+              }
+          });
+      }
+      
+      function entitiesFalling() {
+          let falling = false;
+          document.querySelectorAll('.ab-entity').forEach(e => {
+             if (e.style.display !== 'none' && parseFloat(e.dataset.vy || 0) > 0) {
+                 falling = true;
+             } 
+          });
+          return falling;
       }
 
-      function handlePigHit() {
-        pigHealth -= 34; // 3 hits to kill
+      function handlePigDamage(amount) {
+        pigHealth -= amount; 
         if (pigHealth < 0) pigHealth = 0;
         abPigHealth.style.width = pigHealth + '%';
-        
-        // Poof animation for bird
-        abBird.style.transition = 'transform 0.2s, opacity 0.2s';
-        abBird.style.transform += ' scale(1.5)';
-        abBird.style.opacity = '0';
         
         // Wobble pig
         const pig = document.getElementById('ab-pig');
@@ -3064,15 +3149,13 @@
         setTimeout(() => pig.style.transform = 'rotate(-20deg)', 100);
         setTimeout(() => pig.style.transform = 'rotate(0deg)', 200);
         
-        if (pigHealth === 0) {
+        if (pigHealth === 0 && pig.innerText !== '💥') {
           pig.innerText = '💥';
           setTimeout(() => {
             pig.style.display = 'none';
             abWinBanner.style.display = 'block';
           }, 300);
         }
-        
-        setTimeout(resetBirdPosition, 500);
       }
 
       function resetBirdPosition() {
@@ -3081,6 +3164,14 @@
         abBird.style.transition = 'none';
         abBird.style.opacity = '1';
         abBird.style.transform = 'translate(0px, 0px) rotate(0deg)';
+        
+        // Ensure physics keeps running if things are still falling
+        if (entitiesFalling()) {
+            abAnimFrame = requestAnimationFrame(function continueFalling() {
+                updateTowerPhysics();
+                if (entitiesFalling()) abAnimFrame = requestAnimationFrame(continueFalling);
+            });
+        }
       }
       
       window.resetAngryBirds = function() {
@@ -3090,6 +3181,21 @@
         pig.style.display = 'block';
         pig.innerText = '🐷';
         pig.style.transform = 'rotate(0deg)';
+        pig.style.bottom = '45px';
+        pig.dataset.vy = 0;
+        
+        document.getElementById('wood-1').style.display = 'block';
+        document.getElementById('wood-1').style.bottom = '30px';
+        document.getElementById('wood-1').dataset.vy = 0;
+        
+        document.getElementById('wood-2').style.display = 'block';
+        document.getElementById('wood-2').style.bottom = '0px';
+        document.getElementById('wood-2').dataset.vy = 0;
+        
+        document.getElementById('wood-3').style.display = 'block';
+        document.getElementById('wood-3').style.bottom = '0px';
+        document.getElementById('wood-3').dataset.vy = 0;
+        
         abWinBanner.style.display = 'none';
         resetBirdPosition();
       }
