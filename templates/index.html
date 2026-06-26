@@ -772,121 +772,23 @@
         .url-cell { max-width: 160px; }
       }
 
-      /* ── MOBILE (≤768px) ── */
-      @media (max-width: 768px) {
-        /* Header */
-        .header {
-          padding: 0.75rem 1rem;
-          flex-wrap: wrap;
-          gap: 0.5rem;
+      /* ── FORCE LANDSCAPE ON MOBILE PORTRAIT ── */
+      @media screen and (orientation: portrait) and (max-width: 900px) {
+        html {
+          overflow: hidden;
+          width: 100vw;
+          height: 100vh;
         }
-        .header h1 { font-size: 1.5rem; }
-        .header-badge { display: none; }   /* hides the badge on tiny screens */
-        .nav-links { display: none; }      /* hidden — replaced by nothing for now */
-        .logo-icon { width: 38px; height: 38px; font-size: 1.1rem; }
-
-        /* Hero */
-        .hero {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 0.9rem 1rem;
-          gap: 0.6rem;
-        }
-        .speech-bubble { font-size: 0.9rem; padding: 0.6rem 1rem; }
-        .speech-bubble::before, .speech-bubble::after { display: none; }
-        .hero-text { font-size: 1rem; }
-        .hero-stars:last-child { display: none; }
-
-        /* Content */
-        .content { padding: 1rem; }
-
-        /* Panels */
-        .input-panel, .queue-panel {
-          padding: 1.2rem 1rem;
-          border-radius: 12px;
-          box-shadow: 4px 4px 0 var(--ink);
-        }
-
-        /* Buttons */
-        .btn { font-size: 1rem; padding: 0.7rem 1.2rem; }
-        .button-group { flex-direction: column; }
-        .button-group .btn { width: 100%; justify-content: center; }
-
-        /* Queue header */
-        .queue-header { flex-direction: column; align-items: flex-start; }
-
-        /* ── CARD LAYOUT for task table on mobile ── */
-        /* Hide the standard table, show card view instead */
-        .table-wrap { border: none; }
-
-        table thead { display: none; }   /* hide column headers */
-
-        table, tbody, tr, td {
-          display: block;
-          width: 100%;
-        }
-
-        tbody tr {
-          background: var(--white);
-          border: var(--border-thick);
-          border-radius: 12px;
-          box-shadow: 3px 3px 0 var(--ink);
-          margin-bottom: 1rem;
-          padding: 0.8rem;
-          position: relative;
-        }
-
-        tbody tr:hover { background: var(--paper); }
-
-        td {
-          padding: 0.35rem 0;
-          border-bottom: none;
-          font-size: 0.88rem;
-        }
-
-        /* Label each cell using data-label (set by JS on mobile) */
-        td[data-label]::before {
-          content: attr(data-label) ': ';
-          font-family: 'Bangers', cursive;
-          font-size: 0.8rem;
-          letter-spacing: 1px;
-          color: #999;
-          margin-right: 0.3rem;
-        }
-
-        /* Status badge in top-right of card */
-        td:nth-child(4) {
+        body {
           position: absolute;
-          top: 0.7rem; right: 0.7rem;
-          padding: 0;
+          top: 50%;
+          left: 50%;
+          width: 100vh;
+          height: 100vw;
+          transform: translate(-50%, -50%) rotate(90deg);
+          overflow-y: auto;
+          overflow-x: hidden;
         }
-
-        td:nth-child(4)::before { display: none; }
-
-        /* Action buttons full-width at bottom */
-        .action-cell {
-          text-align: left;
-          margin-top: 0.4rem;
-          display: flex;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .action-cell .btn { flex: 1; justify-content: center; min-width: 80px; }
-
-        /* Footer */
-        .footer-links { flex-direction: column; gap: 0.4rem; }
-      }
-
-      /* ── SMALL MOBILE (≤420px) ── */
-      @media (max-width: 420px) {
-        .header h1 { font-size: 1.25rem; }
-        .logo-icon { width: 32px; height: 32px; font-size: 0.95rem; }
-        .panel-title { font-size: 1.3rem; }
-        .queue-title { font-size: 1.3rem; }
-        textarea { min-height: 90px; font-size: 0.9rem; }
-        .modal-content { width: 95%; }
-        .modal-body { padding: 1.2rem; }
       }
       /* iOS TOAST */
       #iosToast {
@@ -1113,10 +1015,7 @@
         to   { transform: scaleX(0); }
       }
 
-      @media (max-width: 480px) {
-        #genie-container { right: 12px; }
-        .genie-bubble { max-width: 240px; }
-      }
+
 
       /* ── BOSS FIGHT BACKGROUND ── */
       #boss-fight-container {
